@@ -13,3 +13,17 @@ export const sendOtpEmail = async (email, otp) => {
     html: `<p>Kode OTP kamu adalah <b>${otp}</b>. Kode ini berlaku selama 10 menit.</p>`,
   });
 };
+
+export const sendExpiryReminderEmail = async (email, itemName, expiredAt) => {
+  await resend.emails.send({
+    from: 'SisaBisa <onboarding@resend.dev>',
+    to: email,
+    subject: 'Pengingat Bahan Hampir Kadaluarsa',
+    html: `
+      <h2>Pengingat Kadaluarsa</h2>
+      <p>Bahan <b>${itemName}</b> akan kadaluarsa pada:</p>
+      <h3>${expiredAt}</h3>
+      <p>Segera gunakan bahan tersebut agar tidak terbuang.</p>
+    `,
+  });
+};
