@@ -1,29 +1,37 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import RegisterModal from '../../components/RegisterModal';
+import LoginModal from '../../components/LoginModal';
 import ExpiryChecker from './ExpiryChecker';
 
 export default function Home() {
+  const [showRegister, setShowRegister] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+
   return (
     <div className="min-h-screen bg-slate-100">
       <header className="bg-white border-b sticky top-0 z-20">
         <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <Link to="/" className="font-bold text-xl text-green-700">
+          <button
+            onClick={() => window.location.reload()}
+            className="font-bold text-xl text-green-700"
+          >
             SisaBisa
-          </Link>
+          </button>
 
           <nav className="flex items-center gap-3">
-            <Link
-              to="/login"
+            <button
+              onClick={() => setShowLogin(true)}
               className="text-slate-600 hover:text-green-700 font-medium"
             >
               Login
-            </Link>
+            </button>
 
-            <Link
-              to="/register"
+            <button
+              onClick={() => setShowRegister(true)}
               className="bg-green-600 text-white px-4 py-2 rounded-lg font-medium"
             >
               Register
-            </Link>
+            </button>
           </nav>
         </div>
       </header>
@@ -46,19 +54,19 @@ export default function Home() {
             </p>
 
             <div className="mt-6 flex gap-3">
-              <Link
-                to="/register"
+              <button
+                onClick={() => setShowRegister(true)}
                 className="bg-green-600 text-white px-5 py-3 rounded-lg font-semibold"
               >
                 Mulai Sekarang
-              </Link>
+              </button>
 
-              <Link
-                to="/login"
+              <button
+                onClick={() => setShowLogin(true)}
                 className="bg-white border px-5 py-3 rounded-lg font-semibold"
               >
                 Login
-              </Link>
+              </button>
             </div>
           </div>
 
@@ -95,6 +103,14 @@ export default function Home() {
           </div>
         </section>
       </main>
+
+      {showLogin && (
+        <LoginModal onClose={() => setShowLogin(false)} />
+      )}
+
+      {showRegister && (
+        <RegisterModal onClose={() => setShowRegister(false)} />
+      )}
     </div>
   );
 }

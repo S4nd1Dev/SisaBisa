@@ -29,6 +29,34 @@ export const register = async (req, res) => {
   }
 };
 
+const validatePassword = (password) => {
+  if (!password || typeof password !== 'string') {
+    return 'Password wajib diisi';
+  }
+
+  if (password.trim().length !== password.length) {
+    return 'Password tidak boleh diawali atau diakhiri spasi';
+  }
+
+  if (password.length < 8) {
+    return 'Password minimal 8 karakter';
+  }
+
+  if (password.length > 72) {
+    return 'Password maksimal 72 karakter';
+  }
+
+  if (!/[A-Za-z]/.test(password)) {
+    return 'Password harus mengandung huruf';
+  }
+
+  if (!/[0-9]/.test(password)) {
+    return 'Password harus mengandung angka';
+  }
+
+  return null;
+};
+
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -146,6 +174,14 @@ export const verifyRegister = async (req, res) => {
     if (otpResult.rows.length === 0) {
       return res.status(400).json({
         message: 'OTP tidak valid atau sudah expired',
+      });
+    }
+
+    const passwordError = validatePassword(password);
+
+    if (passwordError) {
+      return res.status(400).json({
+      message: passwordError,
       });
     }
 

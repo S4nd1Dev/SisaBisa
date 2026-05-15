@@ -1,25 +1,35 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import ExpiryChecker from './pages/public/ExpiryChecker';
-import Login from './pages/auth/Login';
-import Register from './pages/auth/Register';
 import Dashboard from './pages/user/Dashboard';
 import AdminDashboard from './pages/user/AdminDashboard';
-import { useAuth } from './context/AuthContext';
 import Inventory from './pages/user/Inventory';
 import Home from './pages/public/Home';
+import { useAuth } from './context/AuthContext';
 
 function ProtectedRoute({ children }) {
   const { token } = useAuth();
-  return token ? children : <Navigate to="/login" />;
+
+  return token ? children : <Navigate to="/" replace />;
 }
 
 function AdminRoute({ children }) {
   const { user, token } = useAuth();
 
-  if (!token) return <Navigate to="/login" />;
-  if (user?.role !== 'admin') return <Navigate to="/dashboard" />;
+  if (!token) return <Navigate to="/" replace />;
+  if (user?.role !== 'admin') return <Navigate to="/dashboard" replace />;
 
   return children;
+}
+
+function RedirectUnknownRoute() {
+  const { user, token } = useAuth();
+
+  if (!token) return <Navigate to="/" replace />;
+
+  if (user?.role === 'admin') {
+    return <Navigate to="/admin" replace />;
+  }
+
+  return <Navigate to="/dashboard" replace />;
 }
 
 export default function App() {
@@ -27,14 +37,21 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
 
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/inventory"
+          element={
+            <ProtectedRoute>
+              <Inventory />
             </ProtectedRoute>
           }
         />
@@ -47,16 +64,9 @@ export default function App() {
             </AdminRoute>
           }
         />
-        <Route
-          path="/inventory"
-          element={
-            <ProtectedRoute>
-              <Inventory />
-            </ProtectedRoute>
-          }
-        />
+
+        <Route path="*" element={<RedirectUnknownRoute />} />
       </Routes>
-      
     </BrowserRouter>
   );
 }
