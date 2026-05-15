@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../../api/axios';
+import UserLayout from '../../layouts/UserLayout';
 
 export default function Inventory() {
   const [items, setItems] = useState([]);
@@ -107,6 +108,7 @@ export default function Inventory() {
 
       setSearch('');
       setSelectedIngredient(null);
+
       setForm({
         quantity: '',
         unit: '',
@@ -114,35 +116,56 @@ export default function Inventory() {
         purchase_date: '',
       });
 
+      setMessage('Bahan berhasil ditambahkan.');
+
       fetchInventory();
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Gagal menambah inventory');
+      setMessage(
+        error.response?.data?.message ||
+          'Gagal menambah inventory'
+      );
     }
   };
 
   const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      'Yakin ingin menghapus bahan ini?'
+    );
+
+    if (!confirmDelete) return;
+
     await api.delete(`/inventory/${id}`);
     fetchInventory();
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 p-6">
-      <div className="max-w-5xl mx-auto space-y-6">
+    <UserLayout>
+      <div className="space-y-6">
         <div className="bg-white rounded-2xl shadow p-6">
-          <h1 className="text-2xl font-bold">Inventory Bahan</h1>
+          <h1 className="text-2xl font-bold">
+            Inventory Bahan
+          </h1>
+
           <p className="text-slate-600 mt-1">
-            Tambahkan bahan, sistem akan menghitung tanggal expired otomatis.
+            Tambahkan bahan dan pantau masa kadaluarsanya.
           </p>
         </div>
 
         <div className="bg-white rounded-2xl shadow p-6">
-          <h2 className="font-bold mb-4">Tambah Bahan</h2>
+          <h2 className="font-bold mb-4">
+            Tambah Bahan
+          </h2>
 
-          <form onSubmit={handleAdd} className="grid md:grid-cols-2 gap-4">
+          <form
+            onSubmit={handleAdd}
+            className="grid md:grid-cols-2 gap-4"
+          >
             <div className="relative md:col-span-2">
               <input
                 value={search}
-                onChange={(e) => handleSearch(e.target.value)}
+                onChange={(e) =>
+                  handleSearch(e.target.value)
+                }
                 placeholder="Cari bahan, contoh: telur"
                 className="w-full border rounded-lg px-4 py-2"
                 required
@@ -154,10 +177,15 @@ export default function Inventory() {
                     <button
                       type="button"
                       key={item.ingredient_id}
-                      onClick={() => handleSelectIngredient(item)}
+                      onClick={() =>
+                        handleSelectIngredient(item)
+                      }
                       className="w-full text-left px-4 py-2 hover:bg-slate-100"
                     >
-                      <div className="font-medium">{item.item}</div>
+                      <div className="font-medium">
+                        {item.item}
+                      </div>
+
                       <div className="text-sm text-slate-500">
                         {item.category}
                       </div>
@@ -192,10 +220,21 @@ export default function Inventory() {
               className="border rounded-lg px-4 py-2"
               required
             >
-              <option value="">Pilih kondisi penyimpanan</option>
-              <option value="suhu ruangan">Suhu Ruangan</option>
-              <option value="kulkas">Kulkas</option>
-              <option value="freezer">Freezer</option>
+              <option value="">
+                Pilih kondisi penyimpanan
+              </option>
+
+              <option value="suhu ruangan">
+                Suhu Ruangan
+              </option>
+
+              <option value="kulkas">
+                Kulkas
+              </option>
+
+              <option value="freezer">
+                Freezer
+              </option>
             </select>
 
             <input
@@ -207,28 +246,44 @@ export default function Inventory() {
               required
             />
 
-            <button className="md:col-span-2 bg-green-600 text-white py-2 rounded-lg font-semibold">
+            <button className="md:col-span-2 bg-green-600 hover:bg-green-700 transition text-white py-2 rounded-lg font-semibold">
               Tambah Inventory
             </button>
           </form>
 
-          {message && <p className="mt-4 text-red-600">{message}</p>}
+          {message && (
+            <p className="mt-4 text-sm text-slate-700">
+              {message}
+            </p>
+          )}
         </div>
 
         <div className="bg-white rounded-2xl shadow p-6">
-          <h2 className="font-bold mb-4">Daftar Inventory</h2>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-bold">
+              Daftar Inventory
+            </h2>
+
+            <span className="text-sm text-slate-500">
+              {items.length} bahan
+            </span>
+          </div>
 
           <div className="space-y-3">
             {items.map((item) => {
-              const status = getExpiryStatus(item.expired_at);
+              const status = getExpiryStatus(
+                item.expired_at
+              );
 
               return (
                 <div
                   key={item.id}
-                  className="border rounded-xl p-4 flex justify-between items-center"
+                  className="border rounded-xl p-4 flex justify-between items-center hover:shadow-sm transition"
                 >
                   <div>
-                    <h3 className="font-bold">{item.ingredient_name}</h3>
+                    <h3 className="font-bold">
+                      {item.ingredient_name}
+                    </h3>
 
                     <p className="text-sm text-slate-600">
                       {item.quantity} {item.unit}
@@ -246,8 +301,10 @@ export default function Inventory() {
                   </div>
 
                   <button
-                    onClick={() => handleDelete(item.id)}
-                    className="bg-red-600 text-white px-4 py-2 rounded-lg"
+                    onClick={() =>
+                      handleDelete(item.id)
+                    }
+                    className="bg-red-600 hover:bg-red-700 transition text-white px-4 py-2 rounded-lg"
                   >
                     Hapus
                   </button>
@@ -256,11 +313,15 @@ export default function Inventory() {
             })}
 
             {items.length === 0 && (
-              <p className="text-slate-500">Belum ada bahan di inventory.</p>
+              <div className="text-center py-10">
+                <p className="text-slate-500">
+                  Belum ada bahan di inventory.
+                </p>
+              </div>
             )}
           </div>
         </div>
       </div>
-    </div>
+    </UserLayout>
   );
 }

@@ -6,6 +6,7 @@ import Dashboard from './pages/user/Dashboard';
 import AdminDashboard from './pages/user/AdminDashboard';
 import { useAuth } from './context/AuthContext';
 import Inventory from './pages/user/Inventory';
+import Home from './pages/public/Home';
 
 function ProtectedRoute({ children }) {
   const { token } = useAuth();
@@ -25,7 +26,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<ExpiryChecker />} />
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 

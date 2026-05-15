@@ -4,7 +4,7 @@ import { sendExpiryReminderEmail } from '../services/emailService.js';
 
 export const startExpiryReminderCron = () => {
   cron.schedule(
-    '0 8 * * *',
+    '0 7 * * *',
     async () => {
       try {
         console.log('Checking expiry reminders...');
