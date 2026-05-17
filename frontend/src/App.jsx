@@ -4,6 +4,7 @@ import AdminDashboard from './pages/user/AdminDashboard';
 import Inventory from './pages/user/Inventory';
 import Home from './pages/public/Home';
 import { useAuth } from './context/AuthContext';
+import Recommendations from './pages/user/Recommendations';
 
 function ProtectedRoute({ children }) {
   const { token } = useAuth();
@@ -52,6 +53,15 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Inventory />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/recommendations"
+          element={
+            <ProtectedRoute>
+              <Recommendations />
             </ProtectedRoute>
           }
         />

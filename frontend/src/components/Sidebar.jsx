@@ -1,5 +1,11 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, LogOut, Leaf } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Package,
+  LogOut,
+  Leaf,
+  ChefHat,
+} from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 export default function Sidebar() {
@@ -17,6 +23,11 @@ export default function Sidebar() {
       label: 'Inventory',
       path: '/inventory',
       icon: Package,
+    },
+    {
+      label: 'Rekomendasi',
+      path: '/recommendations',
+      icon: ChefHat,
     },
   ];
 
