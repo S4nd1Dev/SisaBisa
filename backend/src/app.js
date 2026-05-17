@@ -2,6 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes.js';
+import inventoryRoutes from './routes/inventoryRoutes.js';
+import publicRoutes from './routes/publicRoutes.js';
+import { startExpiryReminderCron } from './cron/expiryReminderCron.js';
 
 dotenv.config();
 
@@ -10,7 +13,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+startExpiryReminderCron();
 app.use('/auth', authRoutes);
+app.use('/inventory', inventoryRoutes);
+app.use('/public', publicRoutes);
 
 app.get('/', (req, res) => {
   res.json({
