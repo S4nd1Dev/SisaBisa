@@ -1,0 +1,499 @@
+id,category,item,storage,days
+1,"Biji-bijian, Kacang-kacangan & Pasta",beras,Freezer,730
+1,"Biji-bijian, Kacang-kacangan & Pasta",beras,Kulkas,365
+1,"Biji-bijian, Kacang-kacangan & Pasta",beras,Suhu Ruangan,180
+2,"Biji-bijian, Kacang-kacangan & Pasta",kacang tanah,Freezer,720
+2,"Biji-bijian, Kacang-kacangan & Pasta",kacang tanah,Kulkas,360
+2,"Biji-bijian, Kacang-kacangan & Pasta",kacang tanah,Suhu Ruangan,120
+3,"Biji-bijian, Kacang-kacangan & Pasta",makaroni,Freezer,730
+3,"Biji-bijian, Kacang-kacangan & Pasta",makaroni,Kulkas,365
+3,"Biji-bijian, Kacang-kacangan & Pasta",makaroni,Suhu Ruangan,365
+4,"Biji-bijian, Kacang-kacangan & Pasta",pasta,Freezer,730
+4,"Biji-bijian, Kacang-kacangan & Pasta",pasta,Kulkas,730
+4,"Biji-bijian, Kacang-kacangan & Pasta",pasta,Suhu Ruangan,365
+5,"Biji-bijian, Kacang-kacangan & Pasta",tahu,Freezer,150
+5,"Biji-bijian, Kacang-kacangan & Pasta",tahu,Kulkas,4
+5,"Biji-bijian, Kacang-kacangan & Pasta",tahu,Suhu Ruangan,2
+6,"Biji-bijian, Kacang-kacangan & Pasta",tempe,Freezer,180
+6,"Biji-bijian, Kacang-kacangan & Pasta",tempe,Kulkas,2
+6,"Biji-bijian, Kacang-kacangan & Pasta",tempe,Suhu Ruangan,2
+7,"Biji-bijian, Kacang-kacangan & Pasta",tofu,Freezer,30
+7,"Biji-bijian, Kacang-kacangan & Pasta",tofu,Kulkas,5
+7,"Biji-bijian, Kacang-kacangan & Pasta",tofu,Suhu Ruangan,1
+8,Buah-buahan,alpukat,Freezer,180
+8,Buah-buahan,alpukat,Kulkas,4
+8,Buah-buahan,alpukat,Suhu Ruangan,2
+9,Buah-buahan,apel,Freezer,240
+9,Buah-buahan,apel,Kulkas,42
+9,Buah-buahan,apel,Suhu Ruangan,21
+10,Buah-buahan,belimbing,Freezer,360
+10,Buah-buahan,belimbing,Kulkas,14
+10,Buah-buahan,belimbing,Suhu Ruangan,7
+11,Buah-buahan,ceri,Freezer,360
+11,Buah-buahan,ceri,Kulkas,7
+11,Buah-buahan,ceri,Suhu Ruangan,2
+12,Buah-buahan,jeruk nipis,Freezer,90
+12,Buah-buahan,jeruk nipis,Kulkas,21
+12,Buah-buahan,jeruk nipis,Suhu Ruangan,10
+13,Buah-buahan,kelapa,Freezer,90
+13,Buah-buahan,kelapa,Kulkas,21
+13,Buah-buahan,kelapa,Suhu Ruangan,7
+14,Buah-buahan,lemon,Freezer,90
+14,Buah-buahan,lemon,Kulkas,30
+14,Buah-buahan,lemon,Suhu Ruangan,7
+15,Buah-buahan,mangga,Freezer,240
+15,Buah-buahan,mangga,Kulkas,7
+15,Buah-buahan,mangga,Suhu Ruangan,5
+16,Buah-buahan,nanas,Freezer,360
+16,Buah-buahan,nanas,Kulkas,7
+16,Buah-buahan,nanas,Suhu Ruangan,2
+17,Buah-buahan,pisang,Freezer,90
+17,Buah-buahan,pisang,Kulkas,7
+17,Buah-buahan,pisang,Suhu Ruangan,5
+18,Buah-buahan,stroberi,Freezer,360
+18,Buah-buahan,stroberi,Kulkas,7
+18,Buah-buahan,stroberi,Suhu Ruangan,2
+19,"Bumbu, Saus & Makanan Kalengan",bunga lawang,Freezer,540
+19,"Bumbu, Saus & Makanan Kalengan",bunga lawang,Kulkas,365
+19,"Bumbu, Saus & Makanan Kalengan",bunga lawang,Suhu Ruangan,180
+20,"Bumbu, Saus & Makanan Kalengan",cokelat,Freezer,730
+20,"Bumbu, Saus & Makanan Kalengan",cokelat,Kulkas,360
+20,"Bumbu, Saus & Makanan Kalengan",cokelat,Suhu Ruangan,180
+21,"Bumbu, Saus & Makanan Kalengan",ebi kering,Freezer,365
+21,"Bumbu, Saus & Makanan Kalengan",ebi kering,Kulkas,270
+21,"Bumbu, Saus & Makanan Kalengan",ebi kering,Suhu Ruangan,180
+22,"Bumbu, Saus & Makanan Kalengan",gula aren,Freezer,545
+22,"Bumbu, Saus & Makanan Kalengan",gula aren,Kulkas,365
+22,"Bumbu, Saus & Makanan Kalengan",gula aren,Suhu Ruangan,180
+23,"Bumbu, Saus & Makanan Kalengan",gula merah,Freezer,730
+23,"Bumbu, Saus & Makanan Kalengan",gula merah,Kulkas,365
+23,"Bumbu, Saus & Makanan Kalengan",gula merah,Suhu Ruangan,360
+24,"Bumbu, Saus & Makanan Kalengan",jintan,Freezer,730
+24,"Bumbu, Saus & Makanan Kalengan",jintan,Kulkas,730
+24,"Bumbu, Saus & Makanan Kalengan",jintan,Suhu Ruangan,365
+25,"Bumbu, Saus & Makanan Kalengan",kapulaga,Freezer,730
+25,"Bumbu, Saus & Makanan Kalengan",kapulaga,Kulkas,365
+25,"Bumbu, Saus & Makanan Kalengan",kapulaga,Suhu Ruangan,365
+26,"Bumbu, Saus & Makanan Kalengan",kayu manis,Freezer,730
+26,"Bumbu, Saus & Makanan Kalengan",kayu manis,Kulkas,365
+26,"Bumbu, Saus & Makanan Kalengan",kayu manis,Suhu Ruangan,365
+27,"Bumbu, Saus & Makanan Kalengan",kemiri,Freezer,545
+27,"Bumbu, Saus & Makanan Kalengan",kemiri,Kulkas,365
+27,"Bumbu, Saus & Makanan Kalengan",kemiri,Suhu Ruangan,30
+28,"Bumbu, Saus & Makanan Kalengan",kencur,Freezer,180
+28,"Bumbu, Saus & Makanan Kalengan",kencur,Kulkas,21
+28,"Bumbu, Saus & Makanan Kalengan",kencur,Suhu Ruangan,10
+29,"Bumbu, Saus & Makanan Kalengan",kluwek,Freezer,180
+29,"Bumbu, Saus & Makanan Kalengan",kluwek,Kulkas,30
+29,"Bumbu, Saus & Makanan Kalengan",kluwek,Suhu Ruangan,14
+30,"Bumbu, Saus & Makanan Kalengan",mayones,Freezer,180
+30,"Bumbu, Saus & Makanan Kalengan",mayones,Kulkas,180
+30,"Bumbu, Saus & Makanan Kalengan",mayones,Suhu Ruangan,1
+31,"Bumbu, Saus & Makanan Kalengan",minyak sayur,Freezer,730
+31,"Bumbu, Saus & Makanan Kalengan",minyak sayur,Kulkas,365
+31,"Bumbu, Saus & Makanan Kalengan",minyak sayur,Suhu Ruangan,730
+32,"Bumbu, Saus & Makanan Kalengan",santan,Freezer,90
+32,"Bumbu, Saus & Makanan Kalengan",santan,Kulkas,5
+32,"Bumbu, Saus & Makanan Kalengan",santan,Suhu Ruangan,1
+33,"Bumbu, Saus & Makanan Kalengan",saus barbeque,Freezer,360
+33,"Bumbu, Saus & Makanan Kalengan",saus barbeque,Kulkas,180
+33,"Bumbu, Saus & Makanan Kalengan",saus barbeque,Suhu Ruangan,7
+34,"Bumbu, Saus & Makanan Kalengan",saus bechamel,Freezer,90
+34,"Bumbu, Saus & Makanan Kalengan",saus bechamel,Kulkas,5
+34,"Bumbu, Saus & Makanan Kalengan",saus bechamel,Suhu Ruangan,1
+35,"Bumbu, Saus & Makanan Kalengan",saus bolognese,Freezer,90
+35,"Bumbu, Saus & Makanan Kalengan",saus bolognese,Kulkas,5
+35,"Bumbu, Saus & Makanan Kalengan",saus bolognese,Suhu Ruangan,1
+36,"Bumbu, Saus & Makanan Kalengan",saus hoisin,Freezer,360
+36,"Bumbu, Saus & Makanan Kalengan",saus hoisin,Kulkas,180
+36,"Bumbu, Saus & Makanan Kalengan",saus hoisin,Suhu Ruangan,30
+37,"Bumbu, Saus & Makanan Kalengan",saus salad,Freezer,180
+37,"Bumbu, Saus & Makanan Kalengan",saus salad,Kulkas,90
+37,"Bumbu, Saus & Makanan Kalengan",saus salad,Suhu Ruangan,30
+38,"Bumbu, Saus & Makanan Kalengan",saus sambal,Freezer,360
+38,"Bumbu, Saus & Makanan Kalengan",saus sambal,Kulkas,180
+38,"Bumbu, Saus & Makanan Kalengan",saus sambal,Suhu Ruangan,30
+39,"Bumbu, Saus & Makanan Kalengan",saus teriyaki,Freezer,180
+39,"Bumbu, Saus & Makanan Kalengan",saus teriyaki,Kulkas,90
+39,"Bumbu, Saus & Makanan Kalengan",saus teriyaki,Suhu Ruangan,30
+40,"Bumbu, Saus & Makanan Kalengan",saus tiram,Freezer,360
+40,"Bumbu, Saus & Makanan Kalengan",saus tiram,Kulkas,180
+40,"Bumbu, Saus & Makanan Kalengan",saus tiram,Suhu Ruangan,30
+41,"Bumbu, Saus & Makanan Kalengan",saus tomat,Freezer,360
+41,"Bumbu, Saus & Makanan Kalengan",saus tomat,Kulkas,180
+41,"Bumbu, Saus & Makanan Kalengan",saus tomat,Suhu Ruangan,30
+42,"Bumbu, Saus & Makanan Kalengan",tauco,Freezer,180
+42,"Bumbu, Saus & Makanan Kalengan",tauco,Kulkas,180
+42,"Bumbu, Saus & Makanan Kalengan",tauco,Suhu Ruangan,30
+43,"Bumbu, Saus & Makanan Kalengan",terasi,Freezer,90
+43,"Bumbu, Saus & Makanan Kalengan",terasi,Kulkas,30
+43,"Bumbu, Saus & Makanan Kalengan",terasi,Suhu Ruangan,90
+44,"Bumbu, Saus & Makanan Kalengan",wijen,Freezer,90
+44,"Bumbu, Saus & Makanan Kalengan",wijen,Kulkas,90
+44,"Bumbu, Saus & Makanan Kalengan",wijen,Suhu Ruangan,90
+45,Daging,ampela ayam,Freezer,90
+45,Daging,ampela ayam,Kulkas,2
+45,Daging,ampela ayam,Suhu Ruangan,1
+46,Daging,balungan sapi,Freezer,180
+46,Daging,balungan sapi,Kulkas,3
+46,Daging,balungan sapi,Suhu Ruangan,1
+47,Daging,buntut sapi,Freezer,360
+47,Daging,buntut sapi,Kulkas,3
+47,Daging,buntut sapi,Suhu Ruangan,1
+48,Daging,daging babi,Freezer,60
+48,Daging,daging babi,Kulkas,7
+48,Daging,daging babi,Suhu Ruangan,1
+49,Daging,daging kambing,Freezer,360
+49,Daging,daging kambing,Kulkas,5
+49,Daging,daging kambing,Suhu Ruangan,1
+50,Daging,daging sapi,Freezer,360
+50,Daging,daging sapi,Kulkas,5
+50,Daging,daging sapi,Suhu Ruangan,1
+51,Daging,hati ampela ayam,Freezer,90
+51,Daging,hati ampela ayam,Kulkas,2
+51,Daging,hati ampela ayam,Suhu Ruangan,1
+52,Daging,hati kambing,Freezer,150
+52,Daging,hati kambing,Kulkas,2
+52,Daging,hati kambing,Suhu Ruangan,1
+53,Daging,hati sapi,Freezer,120
+53,Daging,hati sapi,Kulkas,2
+53,Daging,hati sapi,Suhu Ruangan,1
+54,Daging,kaki sapi,Freezer,360
+54,Daging,kaki sapi,Kulkas,3
+54,Daging,kaki sapi,Suhu Ruangan,1
+55,Daging,kikil,Freezer,90
+55,Daging,kikil,Kulkas,3
+55,Daging,kikil,Suhu Ruangan,1
+56,Daging,tetelan sapi,Freezer,360
+56,Daging,tetelan sapi,Kulkas,3
+56,Daging,tetelan sapi,Suhu Ruangan,1
+57,Hidangan laut,belut,Freezer,60
+57,Hidangan laut,belut,Kulkas,2
+57,Hidangan laut,belut,Suhu Ruangan,1
+58,Hidangan laut,cumi,Freezer,540
+58,Hidangan laut,cumi,Kulkas,3
+58,Hidangan laut,cumi,Suhu Ruangan,1
+59,Hidangan laut,ikan asap,Freezer,360
+59,Hidangan laut,ikan asap,Kulkas,45
+59,Hidangan laut,ikan asap,Suhu Ruangan,2
+60,Hidangan laut,ikan asin,Freezer,180
+60,Hidangan laut,ikan asin,Kulkas,90
+60,Hidangan laut,ikan asin,Suhu Ruangan,30
+61,Hidangan laut,ikan bawal,Freezer,180
+61,Hidangan laut,ikan bawal,Kulkas,2
+61,Hidangan laut,ikan bawal,Suhu Ruangan,1
+62,Hidangan laut,ikan cakalang,Freezer,180
+62,Hidangan laut,ikan cakalang,Kulkas,2
+62,Hidangan laut,ikan cakalang,Suhu Ruangan,1
+63,Hidangan laut,ikan dori,Freezer,180
+63,Hidangan laut,ikan dori,Kulkas,2
+63,Hidangan laut,ikan dori,Suhu Ruangan,1
+64,Hidangan laut,ikan gurami,Freezer,180
+64,Hidangan laut,ikan gurami,Kulkas,2
+64,Hidangan laut,ikan gurami,Suhu Ruangan,1
+65,Hidangan laut,ikan kakap,Freezer,189
+65,Hidangan laut,ikan kakap,Kulkas,2
+65,Hidangan laut,ikan kakap,Suhu Ruangan,1
+66,Hidangan laut,ikan kembung,Freezer,180
+66,Hidangan laut,ikan kembung,Kulkas,2
+66,Hidangan laut,ikan kembung,Suhu Ruangan,1
+67,Hidangan laut,ikan kerapu,Freezer,180
+67,Hidangan laut,ikan kerapu,Kulkas,2
+67,Hidangan laut,ikan kerapu,Suhu Ruangan,1
+68,Hidangan laut,ikan klotok,Freezer,180
+68,Hidangan laut,ikan klotok,Kulkas,3
+68,Hidangan laut,ikan klotok,Suhu Ruangan,1
+69,Hidangan laut,ikan kuwe,Freezer,180
+69,Hidangan laut,ikan kuwe,Kulkas,2
+69,Hidangan laut,ikan kuwe,Suhu Ruangan,1
+70,Hidangan laut,ikan lele,Freezer,180
+70,Hidangan laut,ikan lele,Kulkas,2
+70,Hidangan laut,ikan lele,Suhu Ruangan,1
+71,Hidangan laut,ikan mas,Freezer,180
+71,Hidangan laut,ikan mas,Kulkas,2
+71,Hidangan laut,ikan mas,Suhu Ruangan,1
+72,Hidangan laut,ikan nila,Freezer,180
+72,Hidangan laut,ikan nila,Kulkas,2
+72,Hidangan laut,ikan nila,Suhu Ruangan,1
+73,Hidangan laut,ikan pari,Freezer,180
+73,Hidangan laut,ikan pari,Kulkas,2
+73,Hidangan laut,ikan pari,Suhu Ruangan,1
+74,Hidangan laut,ikan patin,Freezer,180
+74,Hidangan laut,ikan patin,Kulkas,2
+74,Hidangan laut,ikan patin,Suhu Ruangan,1
+75,Hidangan laut,ikan salmon,Freezer,90
+75,Hidangan laut,ikan salmon,Kulkas,2
+75,Hidangan laut,ikan salmon,Suhu Ruangan,1
+76,Hidangan laut,ikan tenggiri,Freezer,90
+76,Hidangan laut,ikan tenggiri,Kulkas,2
+76,Hidangan laut,ikan tenggiri,Suhu Ruangan,1
+77,Hidangan laut,ikan tongkol,Freezer,90
+77,Hidangan laut,ikan tongkol,Kulkas,2
+77,Hidangan laut,ikan tongkol,Suhu Ruangan,1
+78,Hidangan laut,kepiting,Freezer,90
+78,Hidangan laut,kepiting,Kulkas,2
+78,Hidangan laut,kepiting,Suhu Ruangan,1
+79,Hidangan laut,kerang,Freezer,540
+79,Hidangan laut,kerang,Kulkas,3
+79,Hidangan laut,kerang,Suhu Ruangan,1
+80,Hidangan laut,teri,Freezer,180
+80,Hidangan laut,teri,Kulkas,14
+80,Hidangan laut,teri,Suhu Ruangan,2
+81,Hidangan laut,udang,Freezer,540
+81,Hidangan laut,udang,Kulkas,3
+81,Hidangan laut,udang,Suhu Ruangan,1
+82,Makanan Tahan Lama di Rak,baking powder,Freezer,730
+82,Makanan Tahan Lama di Rak,baking powder,Kulkas,360
+82,Makanan Tahan Lama di Rak,baking powder,Suhu Ruangan,540
+83,Makanan Tahan Lama di Rak,garam,Freezer,999
+83,Makanan Tahan Lama di Rak,garam,Kulkas,999
+83,Makanan Tahan Lama di Rak,garam,Suhu Ruangan,999
+84,Makanan Tahan Lama di Rak,kerupuk,Freezer,360
+84,Makanan Tahan Lama di Rak,kerupuk,Kulkas,180
+84,Makanan Tahan Lama di Rak,kerupuk,Suhu Ruangan,90
+85,Makanan Tahan Lama di Rak,lada hitam,Freezer,720
+85,Makanan Tahan Lama di Rak,lada hitam,Kulkas,720
+85,Makanan Tahan Lama di Rak,lada hitam,Suhu Ruangan,360
+86,Makanan Tahan Lama di Rak,minyak kelapa,Freezer,1440
+86,Makanan Tahan Lama di Rak,minyak kelapa,Kulkas,720
+86,Makanan Tahan Lama di Rak,minyak kelapa,Suhu Ruangan,540
+87,Makanan Tahan Lama di Rak,minyak wijen,Freezer,730
+87,Makanan Tahan Lama di Rak,minyak wijen,Kulkas,730
+87,Makanan Tahan Lama di Rak,minyak wijen,Suhu Ruangan,365
+88,Makanan Tahan Lama di Rak,pala,Freezer,720
+88,Makanan Tahan Lama di Rak,pala,Kulkas,360
+88,Makanan Tahan Lama di Rak,pala,Suhu Ruangan,360
+89,Makanan Tahan Lama di Rak,soda kue,Freezer,730
+89,Makanan Tahan Lama di Rak,soda kue,Kulkas,360
+89,Makanan Tahan Lama di Rak,soda kue,Suhu Ruangan,540
+90,Makanan Tahan Lama di Rak,tepung jagung,Freezer,365
+90,Makanan Tahan Lama di Rak,tepung jagung,Kulkas,120
+90,Makanan Tahan Lama di Rak,tepung jagung,Suhu Ruangan,30
+91,Makanan Tahan Lama di Rak,tepung maizena,Freezer,720
+91,Makanan Tahan Lama di Rak,tepung maizena,Kulkas,360
+91,Makanan Tahan Lama di Rak,tepung maizena,Suhu Ruangan,360
+92,Makanan Tahan Lama di Rak,tepung roti,Freezer,720
+92,Makanan Tahan Lama di Rak,tepung roti,Kulkas,360
+92,Makanan Tahan Lama di Rak,tepung roti,Suhu Ruangan,180
+93,Makanan Tahan Lama di Rak,tepung sagu,Freezer,720
+93,Makanan Tahan Lama di Rak,tepung sagu,Kulkas,360
+93,Makanan Tahan Lama di Rak,tepung sagu,Suhu Ruangan,360
+94,Makanan Tahan Lama di Rak,tepung tapioka,Freezer,720
+94,Makanan Tahan Lama di Rak,tepung tapioka,Kulkas,360
+94,Makanan Tahan Lama di Rak,tepung tapioka,Suhu Ruangan,360
+95,Produk Susu & Telur,keju cheddar,Freezer,120
+95,Produk Susu & Telur,keju cheddar,Kulkas,30
+95,Produk Susu & Telur,keju cheddar,Suhu Ruangan,1
+96,Produk Susu & Telur,keju mozzarella,Freezer,90
+96,Produk Susu & Telur,keju mozzarella,Kulkas,21
+96,Produk Susu & Telur,keju mozzarella,Suhu Ruangan,1
+97,Produk Susu & Telur,keju parmesan,Freezer,180
+97,Produk Susu & Telur,keju parmesan,Kulkas,360
+97,Produk Susu & Telur,keju parmesan,Suhu Ruangan,1
+98,Produk Susu & Telur,krim,Freezer,90
+98,Produk Susu & Telur,krim,Kulkas,1
+98,Produk Susu & Telur,krim,Suhu Ruangan,1
+99,Produk Susu & Telur,krim keju,Freezer,60
+99,Produk Susu & Telur,krim keju,Kulkas,14
+99,Produk Susu & Telur,krim keju,Suhu Ruangan,1
+100,Produk Susu & Telur,margarin,Freezer,360
+100,Produk Susu & Telur,margarin,Kulkas,180
+100,Produk Susu & Telur,margarin,Suhu Ruangan,90
+101,Produk Susu & Telur,mentega,Freezer,270
+101,Produk Susu & Telur,mentega,Kulkas,60
+101,Produk Susu & Telur,mentega,Suhu Ruangan,1
+102,Produk Susu & Telur,susu,Freezer,90
+102,Produk Susu & Telur,susu,Kulkas,10
+102,Produk Susu & Telur,susu,Suhu Ruangan,1
+103,Produk Susu & Telur,susu bubuk,Freezer,360
+103,Produk Susu & Telur,susu bubuk,Kulkas,180
+103,Produk Susu & Telur,susu bubuk,Suhu Ruangan,90
+104,Produk Susu & Telur,susu kedelai,Freezer,30
+104,Produk Susu & Telur,susu kedelai,Kulkas,10
+104,Produk Susu & Telur,susu kedelai,Suhu Ruangan,1
+105,Produk Susu & Telur,telur ayam,Freezer,365
+105,Produk Susu & Telur,telur ayam,Kulkas,35
+105,Produk Susu & Telur,telur ayam,Suhu Ruangan,14
+106,Produk Susu & Telur,telur puyuh,Freezer,365
+106,Produk Susu & Telur,telur puyuh,Kulkas,21
+106,Produk Susu & Telur,telur puyuh,Suhu Ruangan,7
+107,Produk Susu & Telur,yogurt,Freezer,60
+107,Produk Susu & Telur,yogurt,Kulkas,14
+107,Produk Susu & Telur,yogurt,Suhu Ruangan,1
+108,Sayuran,adas,Freezer,90
+108,Sayuran,adas,Kulkas,14
+108,Sayuran,adas,Suhu Ruangan,7
+109,Sayuran,asam jawa,Freezer,365
+109,Sayuran,asam jawa,Kulkas,180
+109,Sayuran,asam jawa,Suhu Ruangan,21
+110,Sayuran,asparagus,Freezer,30
+110,Sayuran,asparagus,Kulkas,5
+110,Sayuran,asparagus,Suhu Ruangan,1
+111,Sayuran,bawang bombai,Freezer,360
+111,Sayuran,bawang bombai,Kulkas,60
+111,Sayuran,bawang bombai,Suhu Ruangan,30
+112,Sayuran,bawang merah,Freezer,180
+112,Sayuran,bawang merah,Kulkas,7
+112,Sayuran,bawang merah,Suhu Ruangan,90
+113,Sayuran,bawang putih,Freezer,30
+113,Sayuran,bawang putih,Kulkas,14
+113,Sayuran,bawang putih,Suhu Ruangan,30
+114,Sayuran,bengkuang,Freezer,360
+114,Sayuran,bengkuang,Kulkas,14
+114,Sayuran,bengkuang,Suhu Ruangan,7
+115,Sayuran,brokoli,Freezer,360
+115,Sayuran,brokoli,Kulkas,5
+115,Sayuran,brokoli,Suhu Ruangan,2
+116,Sayuran,buncis,Freezer,360
+116,Sayuran,buncis,Kulkas,5
+116,Sayuran,buncis,Suhu Ruangan,1
+117,Sayuran,cabai hijau,Freezer,180
+117,Sayuran,cabai hijau,Kulkas,7
+117,Sayuran,cabai hijau,Suhu Ruangan,3
+118,Sayuran,cabai keriting,Freezer,180
+118,Sayuran,cabai keriting,Kulkas,7
+118,Sayuran,cabai keriting,Suhu Ruangan,3
+119,Sayuran,cabai merah,Freezer,180
+119,Sayuran,cabai merah,Kulkas,7
+119,Sayuran,cabai merah,Suhu Ruangan,3
+120,Sayuran,cabai rawit,Freezer,180
+120,Sayuran,cabai rawit,Kulkas,7
+120,Sayuran,cabai rawit,Suhu Ruangan,3
+121,Sayuran,daun bawang,Freezer,90
+121,Sayuran,daun bawang,Kulkas,21
+121,Sayuran,daun bawang,Suhu Ruangan,14
+122,Sayuran,daun jeruk,Freezer,180
+122,Sayuran,daun jeruk,Kulkas,14
+122,Sayuran,daun jeruk,Suhu Ruangan,3
+123,Sayuran,daun kari,Freezer,180
+123,Sayuran,daun kari,Kulkas,7
+123,Sayuran,daun kari,Suhu Ruangan,2
+124,Sayuran,daun kemangi,Freezer,180
+124,Sayuran,daun kemangi,Kulkas,3
+124,Sayuran,daun kemangi,Suhu Ruangan,1
+125,Sayuran,daun ketumbar,Freezer,180
+125,Sayuran,daun ketumbar,Kulkas,5
+125,Sayuran,daun ketumbar,Suhu Ruangan,1
+126,Sayuran,daun kucai,Freezer,60
+126,Sayuran,daun kucai,Kulkas,5
+126,Sayuran,daun kucai,Suhu Ruangan,1
+127,Sayuran,daun kunyit,Freezer,180
+127,Sayuran,daun kunyit,Kulkas,5
+127,Sayuran,daun kunyit,Suhu Ruangan,1
+128,Sayuran,daun pandan,Freezer,180
+128,Sayuran,daun pandan,Kulkas,5
+128,Sayuran,daun pandan,Suhu Ruangan,1
+129,Sayuran,daun pepaya,Freezer,90
+129,Sayuran,daun pepaya,Kulkas,3
+129,Sayuran,daun pepaya,Suhu Ruangan,1
+130,Sayuran,daun salam,Freezer,90
+130,Sayuran,daun salam,Kulkas,10
+130,Sayuran,daun salam,Suhu Ruangan,3
+131,Sayuran,jagung,Freezer,240
+131,Sayuran,jagung,Kulkas,5
+131,Sayuran,jagung,Suhu Ruangan,3
+132,Sayuran,jamur enoki,Freezer,30
+132,Sayuran,jamur enoki,Kulkas,5
+132,Sayuran,jamur enoki,Suhu Ruangan,1
+133,Sayuran,jamur kancing,Freezer,30
+133,Sayuran,jamur kancing,Kulkas,5
+133,Sayuran,jamur kancing,Suhu Ruangan,1
+134,Sayuran,jamur kuping,Freezer,14
+134,Sayuran,jamur kuping,Kulkas,5
+134,Sayuran,jamur kuping,Suhu Ruangan,2
+135,Sayuran,jamur shimeji,Freezer,90
+135,Sayuran,jamur shimeji,Kulkas,7
+135,Sayuran,jamur shimeji,Suhu Ruangan,1
+136,Sayuran,jamur tiram,Freezer,90
+136,Sayuran,jamur tiram,Kulkas,7
+136,Sayuran,jamur tiram,Suhu Ruangan,1
+137,Sayuran,kacang panjang,Freezer,90
+137,Sayuran,kacang panjang,Kulkas,5
+137,Sayuran,kacang panjang,Suhu Ruangan,3
+138,Sayuran,kailan,Freezer,120
+138,Sayuran,kailan,Kulkas,5
+138,Sayuran,kailan,Suhu Ruangan,1
+139,Sayuran,kangkung,Freezer,180
+139,Sayuran,kangkung,Kulkas,3
+139,Sayuran,kangkung,Suhu Ruangan,2
+140,Sayuran,kembang kol,Freezer,360
+140,Sayuran,kembang kol,Kulkas,5
+140,Sayuran,kembang kol,Suhu Ruangan,2
+141,Sayuran,kentang,Freezer,360
+141,Sayuran,kentang,Kulkas,14
+141,Sayuran,kentang,Suhu Ruangan,60
+142,Sayuran,ketumbar,Freezer,90
+142,Sayuran,ketumbar,Kulkas,21
+142,Sayuran,ketumbar,Suhu Ruangan,14
+143,Sayuran,kimchi,Freezer,540
+143,Sayuran,kimchi,Kulkas,360
+143,Sayuran,kimchi,Suhu Ruangan,2
+144,Sayuran,kubis,Freezer,360
+144,Sayuran,kubis,Kulkas,14
+144,Sayuran,kubis,Suhu Ruangan,2
+145,Sayuran,labu,Freezer,360
+145,Sayuran,labu,Kulkas,150
+145,Sayuran,labu,Suhu Ruangan,90
+146,Sayuran,labu siam,Freezer,300
+146,Sayuran,labu siam,Kulkas,1
+146,Sayuran,labu siam,Suhu Ruangan,2
+147,Sayuran,lobak,Freezer,300
+147,Sayuran,lobak,Kulkas,14
+147,Sayuran,lobak,Suhu Ruangan,3
+148,Sayuran,mentimun,Freezer,180
+148,Sayuran,mentimun,Kulkas,6
+148,Sayuran,mentimun,Suhu Ruangan,3
+149,Sayuran,okra,Freezer,360
+149,Sayuran,okra,Kulkas,3
+149,Sayuran,okra,Suhu Ruangan,1
+150,Sayuran,oregano,Freezer,90
+150,Sayuran,oregano,Kulkas,21
+150,Sayuran,oregano,Suhu Ruangan,14
+151,Sayuran,pakcoy,Freezer,360
+151,Sayuran,pakcoy,Kulkas,3
+151,Sayuran,pakcoy,Suhu Ruangan,2
+152,Sayuran,paprika,Freezer,180
+152,Sayuran,paprika,Kulkas,14
+152,Sayuran,paprika,Suhu Ruangan,5
+153,Sayuran,pare hijau,Freezer,60
+153,Sayuran,pare hijau,Kulkas,5
+153,Sayuran,pare hijau,Suhu Ruangan,2
+154,Sayuran,rebung,Freezer,180
+154,Sayuran,rebung,Kulkas,14
+154,Sayuran,rebung,Suhu Ruangan,2
+155,Sayuran,rosemary,Freezer,90
+155,Sayuran,rosemary,Kulkas,21
+155,Sayuran,rosemary,Suhu Ruangan,14
+156,Sayuran,sawi hijau,Freezer,180
+156,Sayuran,sawi hijau,Kulkas,5
+156,Sayuran,sawi hijau,Suhu Ruangan,2
+157,Sayuran,selada,Freezer,360
+157,Sayuran,selada,Kulkas,14
+157,Sayuran,selada,Suhu Ruangan,2
+158,Sayuran,seledri,Freezer,360
+158,Sayuran,seledri,Kulkas,14
+158,Sayuran,seledri,Suhu Ruangan,2
+159,Sayuran,serai,Freezer,180
+159,Sayuran,serai,Kulkas,9
+159,Sayuran,serai,Suhu Ruangan,3
+160,Sayuran,singkong,Freezer,60
+160,Sayuran,singkong,Kulkas,3
+160,Sayuran,singkong,Suhu Ruangan,7
+161,Sayuran,terong,Freezer,360
+161,Sayuran,terong,Kulkas,7
+161,Sayuran,terong,Suhu Ruangan,2
+162,Sayuran,toge,Freezer,360
+162,Sayuran,toge,Kulkas,3
+162,Sayuran,toge,Suhu Ruangan,2
+163,Sayuran,tomat ceri,Freezer,180
+163,Sayuran,tomat ceri,Kulkas,5
+163,Sayuran,tomat ceri,Suhu Ruangan,10
+164,Sayuran,tomat hijau,Freezer,180
+164,Sayuran,tomat hijau,Kulkas,7
+164,Sayuran,tomat hijau,Suhu Ruangan,5
+165,Sayuran,tomat merah,Freezer,180
+165,Sayuran,tomat merah,Kulkas,7
+165,Sayuran,tomat merah,Suhu Ruangan,3
+166,Sayuran,wortel,Freezer,360
+166,Sayuran,wortel,Kulkas,21
+166,Sayuran,wortel,Suhu Ruangan,2

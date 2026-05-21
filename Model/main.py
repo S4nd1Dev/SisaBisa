@@ -1,5 +1,6 @@
 import json
 import os
+from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import numpy as np
@@ -8,8 +9,11 @@ from pydantic import BaseModel
 import tensorflow as tf
 import requests 
 
+load_dotenv()
+
 app = FastAPI(title="SisaBisa AI Engine API")
 
+# Konfigurasi CORS agar bisa ditembak dari Frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -43,11 +47,11 @@ with open("tokenizer.json", "r", encoding="utf-8") as f:
 
 df_resep = pd.read_excel("dataset_resep_format_final.xlsx") 
 
-# API Key baru yang fresh dari Google AI Studio
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyAaIsGrCVwQ7OICUcGUtIbUnCtmyv4W0sk")
-
 print("✅ Semua komponen AI Berhasil Dimuat!")
 
+# =====================================================================
+# ENDPOINT 1: REKOMENDASI RESEP (TWO-TOWER MODEL)
+# =====================================================================
 class RekomendasiRequest(BaseModel):
     bahan_user: str  
     bahan_mau_basi: str = ""  
@@ -62,7 +66,13 @@ def cari_rekomendasi(request: RekomendasiRequest):
         )
 
         vektor_kulkas = tower_kulkas.predict(pad, verbose=0)[0]
-        raw_scores = np.dot(resep_embeddings, vektor_kulkas)
+        
+        # [FIX] Cosine Similarity: Normalisasi vektor agar persentase terkunci di 0-100%
+        eps = 1e-9 
+        vektor_kulkas_norm = vektor_kulkas / (np.linalg.norm(vektor_kulkas) + eps)
+        resep_embeddings_norm = resep_embeddings / (np.linalg.norm(resep_embeddings, axis=1, keepdims=True) + eps)
+        
+        raw_scores = np.dot(resep_embeddings_norm, vektor_kulkas_norm)
         scores = (raw_scores + 1.0) / 2.0  
 
         df_temp = df_resep.copy()
@@ -70,7 +80,14 @@ def cari_rekomendasi(request: RekomendasiRequest):
 
         if request.bahan_mau_basi.strip():
             bahan_basi = request.bahan_mau_basi.lower().strip()
-            df_temp = df_temp[df_temp["bahan"].str.lower().str.contains(bahan_basi)]
+            
+            # =====================================================================
+            # 🎯 LOGIKA PILIHAN RIYAN: EXACT MATCH BERDASARKAN PEMISAH KOMA
+            # Memotong string bahan, membuang spasi hantu, dan mencocokkan 100% pas
+            # =====================================================================
+            df_temp = df_temp[df_temp["bahan"].apply(
+                lambda x: bahan_basi in [b.strip().lower() for b in str(x).split(",")]
+            )]
 
         if df_temp.empty:
             return {"status": "success", "message": "Tidak ada resep cocok", "results": []}
@@ -78,10 +95,13 @@ def cari_rekomendasi(request: RekomendasiRequest):
         top_resep = df_temp.sort_values(by="score", ascending=False).head(5)
         results = []
         for _, row in top_resep.iterrows():
+            persentase = round(row['score'] * 100)
+            persentase = max(0, min(persentase, 100))
+            
             results.append({
                 "nama_menu": row["nama_menu"],
                 "bahan_resep": row["bahan"],
-                "persentase_kecocokan": f"{round(row['score'] * 100)}%",
+                "persentase_kecocokan": f"{persentase}%",
             })
 
         return {"status": "success", "results": results}
@@ -89,6 +109,9 @@ def cari_rekomendasi(request: RekomendasiRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# =====================================================================
+# ENDPOINT 2: DETAIL RESEP & NUTRISI (GROQ LLAMA-3.1 AI)
+# =====================================================================
 class DetailRequest(BaseModel):
     nama_menu: str
     bahan_resep: str
@@ -96,54 +119,89 @@ class DetailRequest(BaseModel):
 @app.post("/api/detail-resep")
 def dapatkan_detail(request: DetailRequest):
     prompt = f"""
-    Kamu adalah koki profesional dan ahli gizi dari aplikasi SisaBisa.
-    Menu: {request.nama_menu}
-    Bahan Dasar: {request.bahan_resep}
+    [SYSTEM INSTRUCTIONS]
+    Kamu adalah AI kelas dunia yang menggabungkan 3 keahlian profesional: Master Chef, Ahli Gizi Klinis, dan Konsultan Kebugaran.
+    Tugas utamamu adalah menganalisis menu masakan dan bahan sisa yang diberikan, lalu menyusun resep yang logis, praktis, dan bernutrisi.
+
+    [INPUT DATA]
+    Menu Target: {request.nama_menu}
+    Bahan Tersedia: {request.bahan_resep}
     
-    Tolong buatkan:
-    1. 4 langkah memasak yang ringkas dan jelas.
-    2. Estimasi kandungan nutrisi (Kalori, Protein, Karbohidrat, Lemak).
-    
-    Format output HARUS berupa JSON murni tanpa markdown dengan struktur seperti ini:
+    [PROCESSING RULES - STRICT!]
+    1. ANALISIS BAHAN: Gunakan bahan yang tersedia secara efisien. Tambahkan bumbu dasar umum secara logis jika diperlukan agar rasa masakan lezat.
+    2. WAKTU & KESULITAN: Berikan estimasi waktu masak yang realistis dan tingkat kesulitan (Mudah/Sedang/Sulit).
+    3. LANGKAH MEMASAK: Tulis 4-5 langkah berurutan yang ringkas, *action-oriented*, dan mudah diikuti oleh pemula.
+    4. MAKRO NUTRISI: Hitung estimasi nutrisi (Kalori, Protein, Karbohidrat, Lemak, Serat) seakurat mungkin untuk 1 porsi standar.
+    5. INSIGHT KESEHATAN: Berikan 1-2 kalimat analisis tajam mengapa menu ini bagus untuk tubuh. Fokuskan pada aspek seperti optimalisasi gizi, kontrol kalori, atau manfaat bahan spesifik.
+
+    [OUTPUT FORMAT]
+    Keluarkan respons HANYA DALAM FORMAT JSON murni. DILARANG KERAS menambahkan teks pengantar, penutup, atau markdown formatting. 
+    Struktur JSON harus persis seperti ini:
     {{
-        "langkah_memasak": ["Langkah 1...", "Langkah 2..."],
-        "nutrisi": {{"kalori": "350 kkal", "protein": "25g", "karbohidrat": "40g", "lemak": "12g"}}
+        "waktu_masak": "...",
+        "tingkat_kesulitan": "...",
+        "langkah_memasak": [
+            "1. ...",
+            "2. ..."
+        ],
+        "fakta_nutrisi": {{
+            "kalori": "... kkal",
+            "protein": "... g",
+            "karbohidrat": "... g",
+            "lemak": "... g",
+            "serat": "... g"
+        }},
+        "insight_kesehatan": "..."
     }}
     """
     
-    def tembak_gemini(nama_model):
-        url = f"https://generativelanguage.googleapis.com/v1beta/{nama_model}:generateContent?key={GEMINI_API_KEY}"
-        headers = {"Content-Type": "application/json"}
-        payload = {"contents": [{"parts": [{"text": prompt}]}]}
-        return requests.post(url, headers=headers, json=payload)
+    GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+    
+    url = "https://api.groq.com/openai/v1/chat/completions"
+    headers = {
+        "Authorization": f"Bearer {GROQ_API_KEY}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "model": "llama-3.1-8b-instant",
+        "messages": [
+            {"role": "user", "content": prompt}
+        ],
+        "response_format": {"type": "json_object"}, 
+        "temperature": 0.5
+    }
     
     try:
-        # Coba akses menggunakan model utama
-        target_model = "models/gemini-1.5-flash"
-        response = tembak_gemini(target_model)
+        response = requests.post(url, headers=headers, json=payload, timeout=10)
         response_json = response.json()
         
-        # Fitur Auto-Discover jika model flash butuh penyesuaian rute di akun baru
-        if "error" in response_json and response_json["error"].get("status") == "NOT_FOUND":
-            url_list = f"https://generativelanguage.googleapis.com/v1beta/models?key={GEMINI_API_KEY}"
-            list_response = requests.get(url_list).json()
-            
-            if "models" in list_response:
-                for model in list_response["models"]:
-                    if "generateContent" in model.get("supportedGenerationMethods", []):
-                        target_model = model["name"]
-                        break
-                response = tembak_gemini(target_model)
-                response_json = response.json()
-        
         if "error" in response_json:
-            pesan_asli = response_json["error"].get("message", "Error misterius")
-            raise Exception(f"Google API Error: {pesan_asli}")
+            raise Exception(response_json["error"].get("message", "Groq API Error"))
+            
+        text_output = response_json['choices'][0]['message']['content']
+        json_data = json.loads(text_output)
         
-        text_output = response_json['candidates'][0]['content']['parts'][0]['text']
-        text_cleaned = text_output.replace("```json", "").replace("```", "").strip()
-        
-        return {"status": "success", "data": json.loads(text_cleaned)}
+        return {"status": "success", "data": json_data, "sumber": "groq_llama3.1"}
         
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        print(f"⚠️ Gen-AI gagal diakses, menggunakan sistem Fallback. Reason: {str(e)}")
+        fallback_data = {
+            "waktu_masak": "20 menit",
+            "tingkat_kesulitan": "Sedang",
+            "langkah_memasak": [
+                f"1. Siapkan semua bahan, terutama {request.bahan_resep}.",
+                f"2. Panaskan wajan dan olah bumbu dasar hingga harum.",
+                f"3. Masukkan bahan-bahan untuk meracik {request.nama_menu}, aduk rata hingga matang.",
+                "4. Koreksi rasa, angkat, dan sajikan selagi hangat."
+            ],
+            "fakta_nutrisi": {
+                "kalori": "320 kkal",
+                "protein": "15g",
+                "karbohidrat": "35g",
+                "lemak": "10g",
+                "serat": "5g"
+            },
+            "insight_kesehatan": "Kombinasi bahan pada menu ini memberikan keseimbangan makronutrisi yang baik untuk pemulihan energi harian tubuh."
+        }
+        return {"status": "success", "data": fallback_data, "sumber": "sistem_fallback"}
+    
