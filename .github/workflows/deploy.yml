@@ -1,0 +1,26 @@
+name: Sync to Hugging Face Spaces
+
+on:
+  push:
+    branches: [main] # Robot ini akan jalan setiap kamu push ke branch main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: true # Aktifkan ini jika kamu punya file besar (.keras / .npy)
+
+      - name: Push to Hugging Face
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          # Daftarkan remote Hugging Face menggunakan token rahasia
+          # GANTI 'riyansandip/api-SIsaBisa' sesuai dengan username/nama-space kamu di HF!
+          git remote add hf https://riyansandip:$HF_TOKEN@huggingface.co/spaces/riyansandip/api-SIsaBisa
+
+          # Paksa push dari GitHub main ke Hugging Face main
+          git push --force hf main
