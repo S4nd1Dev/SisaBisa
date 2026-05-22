@@ -2,7 +2,7 @@ name: Sync to Hugging Face Spaces
 
 on:
   push:
-    branches: [main] # Robot ini akan jalan setiap kamu push ke branch main
+    branches: [main, master]
 
 jobs:
   deploy:
@@ -11,16 +11,28 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0
-          lfs: true # Aktifkan ini jika kamu punya file besar (.keras / .npy)
+          lfs: true
 
       - name: Push to Hugging Face
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: |
-          # Daftarkan remote Hugging Face menggunakan token rahasia
-          # GANTI 'riyansandip/api-SIsaBisa' sesuai dengan username/nama-space kamu di HF!
-          git remote add hf https://riyansandip:$HF_TOKEN@huggingface.co/spaces/riyansandip/api-SIsaBisa
+          # 1. Masuk ke dalam folder yang isinya sudah benar
+          cd "Ai Engineer"
 
-          # Paksa push dari GitHub main ke Hugging Face main
-          git push --force hf main
+          # 2. Buat repositori Git super bersih (melupakan semua riwayat lama folder Model)
+          git init
+          git checkout -b main
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+
+          # 3. Paksa pembuatan KTP LFS di root Hugging Face agar tidak ditolak
+          echo "*.npy filter=lfs diff=lfs merge=lfs -text" > .gitattributes
+          echo "*.keras filter=lfs diff=lfs merge=lfs -text" >> .gitattributes
+
+          # 4. Bungkus semua file AI Engineer
+          git add .
+          git commit -m "Deploy fresh dari GitHub Actions"
+
+          # 5. Tembak paksa ke Hugging Face (menggantikan 100% sistem lama)
+          git push --force https://riyansandip:$HF_TOKEN@huggingface.co/spaces/riyansandip/api-SIsaBisa main:main
