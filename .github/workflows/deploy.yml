@@ -33,6 +33,10 @@ jobs:
           echo "*.npy filter=lfs diff=lfs merge=lfs -text" > .gitattributes
           echo "*.keras filter=lfs diff=lfs merge=lfs -text" >> .gitattributes
 
+          # 🔥 PAKSA ROBOT UNTUK MEMBAWA FILE EXCEL
+          git add -f "dataset_resep_format_final.xlsx" 2>/dev/null || true
+          git add -f "Dataset_Resep_Format_Final.xlsx" 2>/dev/null || true
+
           # Bungkus dan tembak paksa ke Hugging Face
           git add .
           git commit -m "Deploy full AI SisaBisa dari GitHub Actions"
