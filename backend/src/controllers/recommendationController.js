@@ -70,6 +70,38 @@ export const getRecommendations = async (req, res) => {
   }
 };
 
+export const getManualRecommendations = async (req, res) => {
+  try {
+    const { bahan_user, bahan_mau_basi } = req.body;
+
+    if (!bahan_user || !bahan_mau_basi) {
+      return res.status(400).json({
+        message: 'bahan_user dan bahan_mau_basi wajib diisi',
+      });
+    }
+
+    const aiResponse = await axios.post(
+      `${process.env.AI_API_URL}/api/rekomendasi`,
+      {
+        bahan_user,
+        bahan_mau_basi,
+      }
+    );
+
+    res.json({
+      message: 'Rekomendasi manual berhasil diambil',
+      data: aiResponse.data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message:
+        error.response?.data?.detail ||
+        error.response?.data?.message ||
+        error.message,
+    });
+  }
+};
+
 export const getRecipeDetail = async (req, res) => {
   try {
     const { nama_menu, bahan_resep } = req.body;
