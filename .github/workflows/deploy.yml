@@ -11,7 +11,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
-          lfs: true # 🔥 INI KUNCI RAHASIANYA: Paksa robot bawa file AI raksasa!
+          lfs: true
 
       - name: Deploy to Hugging Face
         env:
@@ -26,18 +26,19 @@ jobs:
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
 
-          # Aktifkan LFS di dalam mesin robot (Wajib untuk AI)
+          # Aktifkan LFS di dalam mesin robot
           git lfs install
 
-          # Buat KTP LFS langsung di tempat
+          # Buat KTP LFS langsung di tempat (Tambah xlsx di sini!)
           echo "*.npy filter=lfs diff=lfs merge=lfs -text" > .gitattributes
           echo "*.keras filter=lfs diff=lfs merge=lfs -text" >> .gitattributes
+          echo "*.xlsx filter=lfs diff=lfs merge=lfs -text" >> .gitattributes
 
-          # 🔥 PAKSA ROBOT UNTUK MEMBAWA FILE EXCEL
+          # Paksa robot membawa file Excel
           git add -f "dataset_resep_format_final.xlsx" 2>/dev/null || true
           git add -f "Dataset_Resep_Format_Final.xlsx" 2>/dev/null || true
 
           # Bungkus dan tembak paksa ke Hugging Face
           git add .
-          git commit -m "Deploy full AI SisaBisa dari GitHub Actions"
+          git commit -m "Deploy full AI SisaBisa beserta Excel lewat LFS"
           git push --force https://riyansandip:$HF_TOKEN@huggingface.co/spaces/riyansandip/api-SIsaBisa main:main
