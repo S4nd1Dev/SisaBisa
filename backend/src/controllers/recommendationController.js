@@ -20,14 +20,11 @@ const getAiErrorMessage = (error) => {
 };
 
 const normalizeRecipeDetail = (aiData, fallbackMenu, fallbackIngredients) => {
-  const detail =
-    aiData.data ||
-    aiData.result ||
-    aiData.results ||
-    aiData;
+  const detail = aiData.data || aiData.result || aiData.results || aiData;
 
   const nutrisi =
     detail.nutrisi ||
+    detail.fakta_nutrisi ||
     detail.nutrition ||
     detail.nutrition_facts ||
     detail.nutritionFact ||
@@ -36,6 +33,10 @@ const normalizeRecipeDetail = (aiData, fallbackMenu, fallbackIngredients) => {
   return {
     nama_menu: detail.nama_menu || fallbackMenu,
     bahan_resep: detail.bahan_resep || fallbackIngredients,
+
+    waktu_masak: detail.waktu_masak || '-',
+    tingkat_kesulitan: detail.tingkat_kesulitan || '-',
+    insight_kesehatan: detail.insight_kesehatan || '-',
 
     langkah_memasak:
       detail.langkah_memasak ||
@@ -71,6 +72,13 @@ const normalizeRecipeDetail = (aiData, fallbackMenu, fallbackIngredients) => {
         detail.karbohidrat ||
         detail.carbohydrate ||
         detail.carbs ||
+        '-',
+
+      serat:
+        nutrisi.serat ||
+        nutrisi.fiber ||
+        detail.serat ||
+        detail.fiber ||
         '-',
     },
 
@@ -133,7 +141,7 @@ export const getRecommendations = async (req, res) => {
       }
     );
 
-    res.json({
+    return res.json({
       message: 'Rekomendasi resep berhasil diambil',
       data: aiResponse.data,
     });
@@ -164,7 +172,7 @@ export const getManualRecommendations = async (req, res) => {
       }
     );
 
-    res.json({
+    return res.json({
       message: 'Rekomendasi manual berhasil diambil',
       data: aiResponse.data,
     });
@@ -201,7 +209,7 @@ export const getRecipeDetail = async (req, res) => {
       bahan_resep
     );
 
-    res.json({
+    return res.json({
       message: 'Detail resep berhasil diambil',
       data: normalizedDetail,
     });
