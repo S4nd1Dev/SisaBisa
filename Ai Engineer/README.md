@@ -1,10 +1,10 @@
 ---
-title: Api SIsaBisa
-emoji: 🏆
+title: API SisaBisa
+emoji: 🍳
 colorFrom: green
 colorTo: blue
 sdk: docker
 pinned: false
 ---
 
-Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
+Ini adalah backend API untuk aplikasi SisaBisa menggunakan model Two-Tower dan Groq LLM.
