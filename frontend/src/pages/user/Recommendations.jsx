@@ -1,11 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useState, useCallback } from 'react';
+import {
+  Bot,
+  ChefHat,
+  Clock,
+  Sparkles,
+  Search,
+  AlertTriangle,
+  Utensils,
+} from 'lucide-react';
 import api from '../../api/axios';
 import UserLayout from '../../layouts/UserLayout';
 import RecipeDetailModal from '../../components/RecipeDetailModal';
 
 export default function Recommendations() {
   const [mode, setMode] = useState('auto');
-
   const [recipes, setRecipes] = useState([]);
   const [expiringItems, setExpiringItems] = useState([]);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
@@ -37,17 +45,12 @@ export default function Recommendations() {
     }
 
     return {
-      label: 'Kurang Cocok',
-      color: 'bg-red-100 text-red-700',
+      label: 'Relevan',
+      color: 'bg-blue-100 text-blue-700',
     };
   };
 
-  useEffect(() => {
-    fetchAutoRecommendations();
-    fetchExpiringItems();
-  }, []);
-
-  const fetchExpiringItems = async () => {
+  const fetchExpiringItems = useCallback(async () => {
     try {
       const response = await api.get('/inventory');
       const items = response.data.data || [];
@@ -70,25 +73,27 @@ export default function Recommendations() {
     } catch (error) {
       console.log(error.message);
     }
-  };
+  }, []);
 
-  const fetchAutoRecommendations = async () => {
+  const fetchAutoRecommendations = useCallback(async () => {
     try {
       setLoading(true);
       setMessage('');
       setRecipes([]);
 
-      const response = await api.get('/recommendations');
+      await fetchExpiringItems();
 
+      const response = await api.get('/recommendations');
       setRecipes(response.data.data.results || []);
     } catch (error) {
       setMessage(
-        error.response?.data?.message || 'Gagal mengambil rekomendasi otomatis'
+        error.response?.data?.message ||
+          'AI belum siap. Silakan coba lagi beberapa saat.'
       );
     } finally {
       setLoading(false);
     }
-  };
+  }, [fetchExpiringItems]);
 
   const handleManualChange = (e) => {
     setManualForm({
@@ -103,7 +108,7 @@ export default function Recommendations() {
     setRecipes([]);
 
     if (!manualForm.bahan_user.trim() || !manualForm.bahan_mau_basi.trim()) {
-      setMessage('Bahan yang dimiliki dan bahan prioritas wajib diisi.');
+      setMessage('Isi bahan yang dimiliki dan bahan prioritas terlebih dahulu.');
       return;
     }
 
@@ -118,7 +123,8 @@ export default function Recommendations() {
       setRecipes(response.data.data.results || []);
     } catch (error) {
       setMessage(
-        error.response?.data?.message || 'Gagal mengambil rekomendasi manual'
+        error.response?.data?.message ||
+          'AI belum siap. Silakan coba lagi beberapa saat.'
       );
     } finally {
       setLoading(false);
@@ -129,12 +135,8 @@ export default function Recommendations() {
     setMode(selectedMode);
     setMessage('');
     setRecipes([]);
+    setExpiringItems([]);
     setSelectedRecipe(null);
-
-    if (selectedMode === 'auto') {
-      fetchAutoRecommendations();
-      fetchExpiringItems();
-    }
   };
 
   const handleRecipeDetail = async (recipe) => {
@@ -150,7 +152,7 @@ export default function Recommendations() {
       setSelectedRecipe(response.data.data);
     } catch (error) {
       setMessage(
-        error.response?.data?.message || 'Gagal mengambil detail resep'
+        error.response?.data?.message || 'Gagal mengambil detail resep.'
       );
     } finally {
       setDetailLoading(false);
@@ -160,21 +162,27 @@ export default function Recommendations() {
   return (
     <UserLayout>
       <div className="space-y-6">
-        <div className="bg-white rounded-2xl shadow p-6">
-          <h1 className="text-2xl font-bold">Rekomendasi Resep AI</h1>
+        <div className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-3xl shadow p-8 text-white">
+          <div className="max-w-3xl">
+            <p className="text-green-100 font-medium">AI Recipe Assistant</p>
 
-          <p className="text-slate-600 mt-1">
-            Pilih rekomendasi otomatis dari bahan hampir expired atau masukkan
-            bahan sendiri untuk mendapatkan ide resep.
-          </p>
+            <h1 className="text-3xl md:text-4xl font-bold mt-2">
+              Temukan Resep dari Bahan yang Kamu Punya
+            </h1>
+
+            <p className="text-green-50 mt-3">
+              Gunakan AI untuk mendapatkan ide resep dari bahan hampir expired
+              atau dari bahan pilihanmu sendiri.
+            </p>
+          </div>
         </div>
 
-        <div className="bg-white rounded-2xl shadow p-2 flex gap-2">
+        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-2 grid md:grid-cols-2 gap-2">
           <button
             onClick={() => handleModeChange('auto')}
-            className={`flex-1 py-3 rounded-xl font-semibold transition ${
+            className={`py-4 rounded-2xl font-semibold transition ${
               mode === 'auto'
-                ? 'bg-green-600 text-white'
+                ? 'bg-green-600 text-white shadow'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
@@ -183,9 +191,9 @@ export default function Recommendations() {
 
           <button
             onClick={() => handleModeChange('manual')}
-            className={`flex-1 py-3 rounded-xl font-semibold transition ${
+            className={`py-4 rounded-2xl font-semibold transition ${
               mode === 'manual'
-                ? 'bg-green-600 text-white'
+                ? 'bg-green-600 text-white shadow'
                 : 'text-slate-600 hover:bg-slate-100'
             }`}
           >
@@ -194,151 +202,140 @@ export default function Recommendations() {
         </div>
 
         {mode === 'auto' && (
-          <>
-            <div className="bg-green-50 border border-green-200 rounded-2xl p-5">
-              <p className="text-green-800 font-semibold">
-                🤖 AI sedang membantu memilih resep terbaik dari inventory kamu.
-              </p>
-              <p className="text-sm text-slate-600 mt-1">
-                Rekomendasi diprioritaskan dari bahan yang masa kadaluarsanya
-                paling dekat.
-              </p>
-            </div>
+          <div className="grid lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-1 space-y-6">
+              <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
+                <div className="bg-green-100 text-green-700 w-12 h-12 rounded-2xl flex items-center justify-center">
+                  <Bot size={24} />
+                </div>
 
-            <div className="bg-white rounded-2xl shadow p-6">
-              <h2 className="font-bold mb-4">
-                Bahan yang Perlu Segera Digunakan
-              </h2>
+                <h2 className="font-bold text-xl mt-4">
+                  Rekomendasi Otomatis
+                </h2>
 
-              {expiringItems.length === 0 ? (
-                <p className="text-slate-500">
-                  Belum ada bahan yang hampir expired dalam 3 hari ke depan.
+                <p className="text-slate-600 text-sm mt-2">
+                  Sistem akan membaca inventory dan mencari bahan yang hampir
+                  expired untuk diprioritaskan dalam resep.
                 </p>
-              ) : (
-                <div className="flex flex-wrap gap-2">
-                  {expiringItems.map((item) => (
-                    <span
-                      key={item.id}
-                      className="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-semibold"
-                    >
-                      {item.ingredient_name}
-                    </span>
-                  ))}
+
+                <button
+                  onClick={fetchAutoRecommendations}
+                  disabled={loading}
+                  className="mt-5 w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 disabled:bg-slate-400"
+                >
+                  {loading ? 'AI sedang mencari...' : 'Cari Rekomendasi'}
+                </button>
+              </div>
+
+              {expiringItems.length > 0 && (
+                <div className="bg-yellow-50 border border-yellow-200 rounded-3xl p-6">
+                  <div className="flex items-center gap-2 text-yellow-800 font-bold">
+                    <AlertTriangle size={20} />
+                    Bahan Prioritas
+                  </div>
+
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    {expiringItems.map((item) => (
+                      <span
+                        key={item.id}
+                        className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-semibold"
+                      >
+                        {item.ingredient_name}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
-          </>
+
+            <div className="lg:col-span-2">
+              <RecommendationResult
+                recipes={recipes}
+                loading={loading}
+                message={message}
+                detailLoading={detailLoading}
+                getMatchLabel={getMatchLabel}
+                onDetail={handleRecipeDetail}
+              />
+            </div>
+          </div>
         )}
 
         {mode === 'manual' && (
-          <div className="bg-white rounded-2xl shadow p-6">
-            <h2 className="font-bold text-lg">Input Bahan Sendiri</h2>
-
-            <p className="text-slate-600 text-sm mt-1">
-              Masukkan bahan yang ingin kamu gunakan, lalu tentukan bahan utama
-              atau bahan prioritas.
-            </p>
-
-            <form
-              onSubmit={handleManualRecommendation}
-              className="mt-5 space-y-4"
-            >
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Bahan yang Dimiliki
-                </label>
-
-                <textarea
-                  name="bahan_user"
-                  value={manualForm.bahan_user}
-                  onChange={handleManualChange}
-                  placeholder="Contoh: telur ayam, bawang merah, cabai, nasi, garam"
-                  className="w-full border rounded-xl px-4 py-3 min-h-28"
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1">
-                  Bahan Prioritas
-                </label>
-
-                <input
-                  name="bahan_mau_basi"
-                  value={manualForm.bahan_mau_basi}
-                  onChange={handleManualChange}
-                  placeholder="Contoh: telur ayam"
-                  className="w-full border rounded-xl px-4 py-3"
-                  required
-                />
-
-                <p className="text-xs text-slate-500 mt-1">
-                  Bahan ini akan diprioritaskan oleh AI dalam rekomendasi resep.
-                </p>
-              </div>
-
-              <button
-                disabled={loading}
-                className="w-full bg-green-600 text-white py-3 rounded-xl font-semibold disabled:bg-slate-400"
-              >
-                {loading ? 'AI sedang mencari resep...' : 'Cari Rekomendasi'}
-              </button>
-            </form>
-          </div>
-        )}
-
-        {message && (
-          <div className="bg-red-100 text-red-700 p-4 rounded-xl">
-            {message}
-          </div>
-        )}
-
-        {loading ? (
-          <div className="bg-white rounded-2xl shadow p-6">
-            <p>AI sedang menganalisis bahan makananmu...</p>
-          </div>
-        ) : recipes.length === 0 ? (
-          <div className="bg-white rounded-2xl shadow p-6">
-            <p className="text-slate-500">
-              Belum ada rekomendasi resep yang tersedia.
-            </p>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 gap-4">
-            {recipes.map((recipe, index) => {
-              const match = getMatchLabel(recipe.persentase_kecocokan);
-
-              return (
-                <div
-                  key={index}
-                  className="bg-white rounded-2xl shadow p-6"
-                >
-                  <h2 className="text-xl font-bold">
-                    {recipe.nama_menu}
-                  </h2>
-
-                  <p className="text-slate-600 mt-3">
-                    {recipe.bahan_resep}
-                  </p>
-
-                  <div className="mt-4 flex items-center justify-between gap-3">
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-semibold ${match.color}`}
-                    >
-                      {match.label}
-                    </span>
-
-                    <button
-                      onClick={() => handleRecipeDetail(recipe)}
-                      disabled={detailLoading}
-                      className="bg-green-600 text-white px-4 py-2 rounded-lg disabled:bg-slate-400"
-                    >
-                      {detailLoading ? 'Memuat...' : 'Detail'}
-                    </button>
-                  </div>
+          <div className="grid lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-1">
+              <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
+                <div className="bg-blue-100 text-blue-700 w-12 h-12 rounded-2xl flex items-center justify-center">
+                  <Search size={24} />
                 </div>
-              );
-            })}
+
+                <h2 className="font-bold text-xl mt-4">
+                  Input Bahan Sendiri
+                </h2>
+
+                <p className="text-slate-600 text-sm mt-2">
+                  Cocok untuk mencari ide resep dari bahan yang ingin kamu
+                  gunakan hari ini.
+                </p>
+
+                <form
+                  onSubmit={handleManualRecommendation}
+                  className="mt-5 space-y-4"
+                >
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      Bahan yang Dimiliki
+                    </label>
+
+                    <textarea
+                      name="bahan_user"
+                      value={manualForm.bahan_user}
+                      onChange={handleManualChange}
+                      placeholder="Contoh: telur ayam, bawang merah, cabai, nasi, garam"
+                      className="w-full border border-slate-200 rounded-xl px-4 py-3 min-h-32 focus:outline-none focus:ring-2 focus:ring-green-500"
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      Bahan Prioritas
+                    </label>
+
+                    <input
+                      name="bahan_mau_basi"
+                      value={manualForm.bahan_mau_basi}
+                      onChange={handleManualChange}
+                      placeholder="Contoh: telur ayam"
+                      className="w-full border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+                      required
+                    />
+
+                    <p className="text-xs text-slate-500 mt-1">
+                      Bahan ini akan diprioritaskan oleh AI.
+                    </p>
+                  </div>
+
+                  <button
+                    disabled={loading}
+                    className="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 disabled:bg-slate-400"
+                  >
+                    {loading ? 'AI sedang mencari...' : 'Cari Resep'}
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <div className="lg:col-span-2">
+              <RecommendationResult
+                recipes={recipes}
+                loading={loading}
+                message={message}
+                detailLoading={detailLoading}
+                getMatchLabel={getMatchLabel}
+                onDetail={handleRecipeDetail}
+              />
+            </div>
           </div>
         )}
 
@@ -350,5 +347,103 @@ export default function Recommendations() {
         )}
       </div>
     </UserLayout>
+  );
+}
+
+function RecommendationResult({
+  recipes,
+  loading,
+  message,
+  detailLoading,
+  getMatchLabel,
+  onDetail,
+}) {
+  if (loading) {
+    return (
+      <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
+        <div className="flex items-center gap-3">
+          <div className="bg-green-100 text-green-700 p-3 rounded-2xl">
+            <Sparkles size={24} />
+          </div>
+
+          <div>
+            <h2 className="font-bold text-xl">AI sedang menganalisis...</h2>
+            <p className="text-slate-500 mt-1">
+              Menyesuaikan bahan dengan resep yang paling cocok.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (message) {
+    return (
+      <div className="bg-red-50 border border-red-200 text-red-700 rounded-3xl p-6">
+        {message}
+      </div>
+    );
+  }
+
+  if (recipes.length === 0) {
+    return (
+      <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-10 text-center">
+        <div className="mx-auto bg-slate-100 text-slate-500 w-16 h-16 rounded-2xl flex items-center justify-center">
+          <Utensils size={30} />
+        </div>
+
+        <h2 className="font-bold text-xl mt-4">Belum ada rekomendasi</h2>
+
+        <p className="text-slate-500 mt-2">
+          Pilih mode rekomendasi, lalu klik tombol pencarian resep.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid md:grid-cols-2 gap-4">
+      {recipes.map((recipe, index) => {
+        const match = getMatchLabel(recipe.persentase_kecocokan);
+
+        return (
+          <div
+            key={index}
+            className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 hover:shadow-md transition"
+          >
+            <div className="bg-green-100 text-green-700 w-12 h-12 rounded-2xl flex items-center justify-center">
+              <ChefHat size={24} />
+            </div>
+
+            <h2 className="text-xl font-bold mt-4">{recipe.nama_menu}</h2>
+
+            <p className="text-slate-600 mt-3 line-clamp-2">
+              {recipe.bahan_resep}
+            </p>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span
+                className={`px-3 py-1 rounded-full text-sm font-semibold ${match.color}`}
+              >
+                {match.label}
+              </span>
+
+              <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-sm font-semibold inline-flex items-center gap-1">
+                <Clock size={14} />
+                Cepat dibuat
+              </span>
+            </div>
+
+            <button
+              onClick={() => onDetail(recipe)}
+              disabled={detailLoading}
+              className="mt-5 w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 disabled:bg-slate-400"
+            >
+              {detailLoading ? 'Memuat Detail...' : 'Lihat Detail Resep'}
+            </button>
+          </div>
+        );
+      })}
+    </div>
   );
 }

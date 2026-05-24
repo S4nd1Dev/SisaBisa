@@ -1,6 +1,83 @@
 import axios from 'axios';
 import pool from '../config/db.js';
 
+const getAiErrorMessage = (error) => {
+  if (error.response?.status === 503) {
+    return {
+      status: 503,
+      message:
+        'AI sedang tidak aktif atau loading. Silakan coba lagi dalam beberapa saat.',
+    };
+  }
+
+  return {
+    status: 500,
+    message:
+      error.response?.data?.detail ||
+      error.response?.data?.message ||
+      error.message,
+  };
+};
+
+const normalizeRecipeDetail = (aiData, fallbackMenu, fallbackIngredients) => {
+  const detail =
+    aiData.data ||
+    aiData.result ||
+    aiData.results ||
+    aiData;
+
+  const nutrisi =
+    detail.nutrisi ||
+    detail.nutrition ||
+    detail.nutrition_facts ||
+    detail.nutritionFact ||
+    {};
+
+  return {
+    nama_menu: detail.nama_menu || fallbackMenu,
+    bahan_resep: detail.bahan_resep || fallbackIngredients,
+
+    langkah_memasak:
+      detail.langkah_memasak ||
+      detail.langkah ||
+      detail.steps ||
+      detail.cara_memasak ||
+      [],
+
+    nutrisi: {
+      kalori:
+        nutrisi.kalori ||
+        nutrisi.calories ||
+        detail.kalori ||
+        detail.calories ||
+        '-',
+
+      protein:
+        nutrisi.protein ||
+        detail.protein ||
+        '-',
+
+      lemak:
+        nutrisi.lemak ||
+        nutrisi.fat ||
+        detail.lemak ||
+        detail.fat ||
+        '-',
+
+      karbohidrat:
+        nutrisi.karbohidrat ||
+        nutrisi.carbohydrate ||
+        nutrisi.carbs ||
+        detail.karbohidrat ||
+        detail.carbohydrate ||
+        detail.carbs ||
+        '-',
+    },
+
+    raw_response: aiData,
+  };
+};
+
 export const getRecommendations = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -61,11 +138,10 @@ export const getRecommendations = async (req, res) => {
       data: aiResponse.data,
     });
   } catch (error) {
-    res.status(500).json({
-      message:
-        error.response?.data?.detail ||
-        error.response?.data?.message ||
-        error.message,
+    const aiError = getAiErrorMessage(error);
+
+    return res.status(aiError.status).json({
+      message: aiError.message,
     });
   }
 };
@@ -93,11 +169,10 @@ export const getManualRecommendations = async (req, res) => {
       data: aiResponse.data,
     });
   } catch (error) {
-    res.status(500).json({
-      message:
-        error.response?.data?.detail ||
-        error.response?.data?.message ||
-        error.message,
+    const aiError = getAiErrorMessage(error);
+
+    return res.status(aiError.status).json({
+      message: aiError.message,
     });
   }
 };
@@ -120,55 +195,21 @@ export const getRecipeDetail = async (req, res) => {
       }
     );
 
-    const aiData = aiResponse.data;
-
-    const detail = aiData.data || aiData.result || aiData.results || aiData;
-
-    const normalizedDetail = {
-      nama_menu: detail.nama_menu || nama_menu,
-      bahan_resep: detail.bahan_resep || bahan_resep,
-
-      langkah_memasak:
-        detail.langkah_memasak ||
-        detail.langkah ||
-        detail.steps ||
-        [],
-
-      nutrisi: {
-        kalori:
-          detail.nutrisi?.kalori ||
-          detail.kalori ||
-          '-',
-
-        protein:
-          detail.nutrisi?.protein ||
-          detail.protein ||
-          '-',
-
-        lemak:
-          detail.nutrisi?.lemak ||
-          detail.lemak ||
-          '-',
-
-        karbohidrat:
-          detail.nutrisi?.karbohidrat ||
-          detail.karbohidrat ||
-          '-',
-      },
-
-      raw_response: aiData,
-    };
+    const normalizedDetail = normalizeRecipeDetail(
+      aiResponse.data,
+      nama_menu,
+      bahan_resep
+    );
 
     res.json({
       message: 'Detail resep berhasil diambil',
       data: normalizedDetail,
     });
   } catch (error) {
-    res.status(500).json({
-      message:
-        error.response?.data?.detail ||
-        error.response?.data?.message ||
-        error.message,
+    const aiError = getAiErrorMessage(error);
+
+    return res.status(aiError.status).json({
+      message: aiError.message,
     });
   }
 };
