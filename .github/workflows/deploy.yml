@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          lfs: true # 🔥 INI KUNCI RAHASIANYA: Paksa robot bawa file AI raksasa!
 
       - name: Deploy to Hugging Face
         env:
@@ -17,18 +19,21 @@ jobs:
         run: |
           # Masuk ke folder yang isinya AI Engineer
           cd "Ai Engineer"
-          
+
           # Bikin Git baru yang amnesia dari masa lalu
           git init
           git checkout -b main
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
-          
+
+          # Aktifkan LFS di dalam mesin robot (Wajib untuk AI)
+          git lfs install
+
           # Buat KTP LFS langsung di tempat
           echo "*.npy filter=lfs diff=lfs merge=lfs -text" > .gitattributes
           echo "*.keras filter=lfs diff=lfs merge=lfs -text" >> .gitattributes
-          
+
           # Bungkus dan tembak paksa ke Hugging Face
           git add .
-          git commit -m "Deploy fresh dari GitHub Actions"
+          git commit -m "Deploy full AI SisaBisa dari GitHub Actions"
           git push --force https://riyansandip:$HF_TOKEN@huggingface.co/spaces/riyansandip/api-SIsaBisa main:main
