@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import DeleteConfirmModal from '../../components/DeleteConfirmModal';
 import {
   Search,
   Plus,
@@ -17,7 +19,7 @@ export default function Inventory() {
   const [search, setSearch] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [selectedIngredient, setSelectedIngredient] = useState(null);
-  const [message, setMessage] = useState('');
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   const [form, setForm] = useState({
     quantity: '',
@@ -38,8 +40,8 @@ export default function Inventory() {
       try {
         const data = await fetchInventory();
         if (!ignore) setItems(data);
-      } catch (error) {
-        console.log(error.message);
+      } catch {
+        toast.error('Gagal memuat inventory');
       }
     };
 
@@ -93,8 +95,12 @@ export default function Inventory() {
       return;
     }
 
-    const response = await api.get(`/public/ingredients?search=${value}`);
-    setSuggestions(response.data.data || []);
+    try {
+      const response = await api.get(`/public/ingredients?search=${value}`);
+      setSuggestions(response.data.data || []);
+    } catch {
+      toast.error('Gagal mencari bahan');
+    }
   };
 
   const handleSelectIngredient = (ingredient) => {
@@ -112,10 +118,9 @@ export default function Inventory() {
 
   const handleAdd = async (e) => {
     e.preventDefault();
-    setMessage('');
 
     if (!selectedIngredient) {
-      setMessage('Pilih bahan dari suggestion terlebih dahulu.');
+      toast.error('Pilih bahan dari suggestion terlebih dahulu');
       return;
     }
 
@@ -144,25 +149,28 @@ export default function Inventory() {
         purchase_date: '',
       });
 
-      setMessage('Bahan berhasil ditambahkan.');
+      toast.success('Bahan berhasil ditambahkan');
 
       const data = await fetchInventory();
       setItems(data);
-    } catch (error) {
-      setMessage(
-        error.response?.data?.message || 'Gagal menambah inventory'
-      );
+    } catch {
+      toast.error('Gagal menambah inventory');
     }
   };
 
-  const handleDelete = async (id) => {
-    const confirmDelete = window.confirm('Yakin ingin menghapus bahan ini?');
-    if (!confirmDelete) return;
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
 
-    await api.delete(`/inventory/${id}`);
+    try {
+      await api.delete(`/inventory/${deleteTarget.id}`);
+      toast.success('Bahan berhasil dihapus');
 
-    const data = await fetchInventory();
-    setItems(data);
+      const data = await fetchInventory();
+      setItems(data);
+      setDeleteTarget(null);
+    } catch {
+      toast.error('Gagal menghapus bahan');
+    }
   };
 
   return (
@@ -213,7 +221,10 @@ export default function Inventory() {
             </div>
           </div>
 
-          <form onSubmit={handleAdd} className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <form
+            onSubmit={handleAdd}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4"
+          >
             <div className="relative md:col-span-2">
               <Search
                 size={20}
@@ -291,12 +302,6 @@ export default function Inventory() {
               Tambah ke Inventory
             </button>
           </form>
-
-          {message && (
-            <div className="mt-4 bg-slate-100 text-slate-700 px-4 py-3 rounded-xl text-sm">
-              {message}
-            </div>
-          )}
         </section>
 
         <section className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 md:p-6">
@@ -370,7 +375,7 @@ export default function Inventory() {
                   </div>
 
                   <button
-                    onClick={() => handleDelete(item.id)}
+                    onClick={() => setDeleteTarget(item)}
                     className="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 px-4 py-2 rounded-xl font-semibold transition"
                   >
                     <Trash2 size={17} />
@@ -398,6 +403,14 @@ export default function Inventory() {
             )}
           </div>
         </section>
+
+        {deleteTarget && (
+          <DeleteConfirmModal
+            itemName={deleteTarget.ingredient_name}
+            onCancel={() => setDeleteTarget(null)}
+            onConfirm={handleDelete}
+          />
+        )}
       </div>
     </UserLayout>
   );
