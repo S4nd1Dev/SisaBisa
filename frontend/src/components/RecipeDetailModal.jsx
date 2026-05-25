@@ -1,98 +1,222 @@
-import { X } from 'lucide-react';
+import {
+  X,
+  Clock,
+  BarChart3,
+  HeartPulse,
+  Flame,
+  Dumbbell,
+  Wheat,
+  Droplets,
+  Leaf,
+  ChefHat,
+} from 'lucide-react';
 
 export default function RecipeDetailModal({ recipe, onClose }) {
   if (!recipe) return null;
 
+  const steps = recipe.langkah_memasak || [];
+  const nutrition = recipe.nutrisi || {};
+
+  const cleanStepText = (step, index) => {
+    return step.replace(new RegExp(`^${index + 1}\\.\\s*`), '');
+  };
+
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4">
-      <div className="relative w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-xl p-6">
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 bg-slate-100 hover:bg-slate-200 rounded-full p-2"
-        >
-          <X size={18} />
-        </button>
+    <div className="fixed inset-0 z-50 bg-black/50 flex items-end md:items-center justify-center md:px-4">
+      <div className="relative w-full md:max-w-4xl max-h-[92vh] md:max-h-[90vh] overflow-y-auto bg-white rounded-t-3xl md:rounded-3xl shadow-xl">
+        <div className="sticky top-0 z-10 bg-white border-b px-4 md:px-6 py-4 flex justify-between items-start rounded-t-3xl">
+          <div className="pr-4">
+            <p className="text-green-700 font-semibold flex items-center gap-2 text-sm">
+              <ChefHat size={18} />
+              Detail Resep AI
+            </p>
 
-        <div className="pr-10">
-          <p className="text-green-700 font-semibold mb-2">
-            Detail Resep AI
-          </p>
-
-          <h2 className="text-2xl font-bold">
-            {recipe.nama_menu}
-          </h2>
-
-          <p className="text-slate-600 mt-2">
-            {recipe.bahan_resep}
-          </p>
-        </div>
-
-        <div className="mt-6">
-          <h3 className="font-bold text-lg mb-3">
-            Langkah Memasak
-          </h3>
-
-          {recipe.langkah_memasak?.length > 0 ? (
-            <div className="space-y-2">
-              {recipe.langkah_memasak.map((step, index) => (
-                <div
-                  key={index}
-                  className="border rounded-xl p-4 bg-slate-50"
-                >
-                  <p>
-                    <span className="font-bold">
-                      Step {index + 1}:
-                    </span>{' '}
-                    {step}
-                  </p>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="bg-slate-100 rounded-xl p-4">
-              <p className="text-slate-500">
-                Langkah memasak belum tersedia.
-              </p>
-            </div>
-          )}
-        </div>
-
-        <div className="mt-6">
-          <h3 className="font-bold text-lg mb-3">
-            Informasi Nutrisi
-          </h3>
-
-          <div className="grid md:grid-cols-4 gap-4">
-            <div className="bg-slate-100 rounded-xl p-4">
-              <p className="text-slate-500">Kalori</p>
-              <h4 className="text-xl font-bold">
-                {recipe.nutrisi?.kalori || '-'}
-              </h4>
-            </div>
-
-            <div className="bg-slate-100 rounded-xl p-4">
-              <p className="text-slate-500">Protein</p>
-              <h4 className="text-xl font-bold">
-                {recipe.nutrisi?.protein || '-'}
-              </h4>
-            </div>
-
-            <div className="bg-slate-100 rounded-xl p-4">
-              <p className="text-slate-500">Lemak</p>
-              <h4 className="text-xl font-bold">
-                {recipe.nutrisi?.lemak || '-'}
-              </h4>
-            </div>
-
-            <div className="bg-slate-100 rounded-xl p-4">
-              <p className="text-slate-500">Karbohidrat</p>
-              <h4 className="text-xl font-bold">
-                {recipe.nutrisi?.karbohidrat || '-'}
-              </h4>
-            </div>
+            <h2 className="text-xl md:text-3xl font-bold mt-2 leading-tight">
+              {recipe.nama_menu}
+            </h2>
           </div>
+
+          <button
+            onClick={onClose}
+            className="bg-slate-100 hover:bg-slate-200 rounded-full p-2 shrink-0"
+          >
+            <X size={20} />
+          </button>
+        </div>
+
+        <div className="p-4 md:p-6 space-y-5 pb-24 md:pb-6">
+          <section className="bg-green-50 border border-green-100 rounded-2xl md:rounded-3xl p-4 md:p-5">
+            <h3 className="font-bold mb-2">Bahan yang Digunakan</h3>
+            <p className="text-slate-700 leading-relaxed text-sm md:text-base">
+              {recipe.bahan_resep}
+            </p>
+          </section>
+
+          <section className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4">
+            <InfoCard
+              icon={Clock}
+              title="Waktu Masak"
+              value={recipe.waktu_masak || '-'}
+              color="bg-green-100 text-green-700"
+            />
+
+            <InfoCard
+              icon={BarChart3}
+              title="Tingkat Kesulitan"
+              value={recipe.tingkat_kesulitan || '-'}
+              color="bg-blue-100 text-blue-700"
+            />
+          </section>
+
+          <section>
+            <h3 className="font-bold text-lg md:text-xl mb-4">
+              Langkah Memasak
+            </h3>
+
+            {steps.length > 0 ? (
+              <div className="space-y-3">
+                {steps.map((step, index) => (
+                  <div
+                    key={index}
+                    className="border border-slate-200 rounded-2xl p-4 bg-white flex gap-3 md:gap-4"
+                  >
+                    <div className="bg-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 text-sm">
+                      {index + 1}
+                    </div>
+
+                    <p className="text-slate-700 leading-relaxed text-sm md:text-base">
+                      {cleanStepText(step, index)}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="bg-slate-100 rounded-xl p-4">
+                <p className="text-slate-500">
+                  Langkah memasak belum tersedia.
+                </p>
+              </div>
+            )}
+          </section>
+
+          <section>
+            <h3 className="font-bold text-lg md:text-xl mb-4">
+              Informasi Nutrisi
+            </h3>
+
+            <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4">
+              <NutritionCard
+                icon={Flame}
+                title="Kalori"
+                value={nutrition.kalori}
+                color="bg-red-100 text-red-700"
+              />
+
+              <NutritionCard
+                icon={Dumbbell}
+                title="Protein"
+                value={nutrition.protein}
+                color="bg-blue-100 text-blue-700"
+              />
+
+              <NutritionCard
+                icon={Droplets}
+                title="Lemak"
+                value={nutrition.lemak}
+                color="bg-yellow-100 text-yellow-700"
+              />
+
+              <NutritionCard
+                icon={Wheat}
+                title="Karbohidrat"
+                value={nutrition.karbohidrat}
+                color="bg-orange-100 text-orange-700"
+              />
+
+              <NutritionCard
+                icon={Leaf}
+                title="Serat"
+                value={nutrition.serat}
+                color="bg-green-100 text-green-700"
+              />
+            </div>
+          </section>
+
+          <section className="bg-blue-50 border border-blue-100 rounded-2xl md:rounded-3xl p-4 md:p-5">
+            <div className="flex items-start gap-3">
+              <div className="bg-blue-100 text-blue-700 p-3 rounded-2xl shrink-0">
+                <HeartPulse size={22} />
+              </div>
+
+              <div>
+                <h3 className="font-bold text-blue-900">
+                  Insight Kesehatan
+                </h3>
+
+                <p className="text-slate-700 mt-1 leading-relaxed text-sm md:text-base">
+                  {recipe.insight_kesehatan ||
+                    'Insight kesehatan belum tersedia untuk resep ini.'}
+                </p>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-20 bg-white border-t p-4">
+          <button
+            onClick={onClose}
+            className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold"
+          >
+            Selesai
+          </button>
+        </div>
+
+        <div className="hidden md:block px-6 pb-6">
+          <button
+            onClick={onClose}
+            className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold"
+          >
+            Selesai
+          </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function InfoCard({ icon: Icon, title, value, color }) {
+  return (
+    <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 md:p-5 flex items-center gap-4">
+      <div className={`${color} p-3 rounded-2xl shrink-0`}>
+        <Icon size={22} />
+      </div>
+
+      <div>
+        <p className="text-slate-500 text-sm">{title}</p>
+        <h4 className="font-bold text-base md:text-lg">
+          {value}
+        </h4>
+      </div>
+    </div>
+  );
+}
+
+function NutritionCard({ icon: Icon, title, value, color }) {
+  return (
+    <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4">
+      <div
+        className={`${color} w-10 h-10 rounded-xl flex items-center justify-center`}
+      >
+        <Icon size={20} />
+      </div>
+
+      <p className="text-slate-500 text-xs md:text-sm mt-3">
+        {title}
+      </p>
+
+      <h4 className="text-base md:text-lg font-bold mt-1 break-words">
+        {value || '-'}
+      </h4>
     </div>
   );
 }

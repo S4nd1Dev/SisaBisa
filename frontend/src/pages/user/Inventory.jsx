@@ -37,10 +37,7 @@ export default function Inventory() {
     const loadInventory = async () => {
       try {
         const data = await fetchInventory();
-
-        if (!ignore) {
-          setItems(data);
-        }
+        if (!ignore) setItems(data);
       } catch (error) {
         console.log(error.message);
       }
@@ -160,7 +157,6 @@ export default function Inventory() {
 
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm('Yakin ingin menghapus bahan ini?');
-
     if (!confirmDelete) return;
 
     await api.delete(`/inventory/${id}`);
@@ -171,45 +167,53 @@ export default function Inventory() {
 
   return (
     <UserLayout>
-      <div className="space-y-6">
-        <div className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-3xl shadow p-8 text-white">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+      <div className="space-y-5 md:space-y-6">
+        <section className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-3xl shadow p-5 md:p-8 text-white">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 md:gap-6">
             <div>
-              <p className="text-green-100 font-medium">Inventory Management</p>
+              <p className="text-green-100 font-medium text-sm md:text-base">
+                Inventory Management
+              </p>
 
-              <h1 className="text-3xl md:text-4xl font-bold mt-2">
+              <h1 className="text-2xl md:text-4xl font-bold mt-2 leading-tight">
                 Kelola Bahan Makanan
               </h1>
 
-              <p className="text-green-50 mt-3 max-w-2xl">
+              <p className="text-green-50 mt-3 max-w-2xl text-sm md:text-base leading-relaxed">
                 Tambahkan bahan makanan, pilih kondisi penyimpanan, dan sistem
                 akan menghitung estimasi tanggal kadaluarsa secara otomatis.
               </p>
             </div>
 
-            <div className="bg-white/20 border border-white/30 rounded-2xl p-5 min-w-40">
+            <div className="bg-white/20 border border-white/30 rounded-2xl p-4 md:p-5 md:min-w-40">
               <p className="text-green-50 text-sm">Total Inventory</p>
-              <h2 className="text-4xl font-bold mt-1">{items.length}</h2>
-              <p className="text-green-50 text-sm mt-1">bahan tersimpan</p>
+              <h2 className="text-3xl md:text-4xl font-bold mt-1">
+                {items.length}
+              </h2>
+              <p className="text-green-50 text-sm mt-1">
+                bahan tersimpan
+              </p>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="bg-green-100 text-green-700 p-3 rounded-2xl">
+        <section className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 md:p-6">
+          <div className="flex items-start gap-3 mb-5 md:mb-6">
+            <div className="bg-green-100 text-green-700 p-3 rounded-2xl shrink-0">
               <Plus size={22} />
             </div>
 
             <div>
-              <h2 className="font-bold text-xl">Tambah Bahan</h2>
+              <h2 className="font-bold text-lg md:text-xl">
+                Tambah Bahan
+              </h2>
               <p className="text-sm text-slate-500">
                 Cari bahan dari dataset lalu masukkan jumlah dan tanggal beli.
               </p>
             </div>
           </div>
 
-          <form onSubmit={handleAdd} className="grid md:grid-cols-2 gap-4">
+          <form onSubmit={handleAdd} className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="relative md:col-span-2">
               <Search
                 size={20}
@@ -225,7 +229,7 @@ export default function Inventory() {
               />
 
               {suggestions.length > 0 && (
-                <div className="absolute z-10 bg-white border border-slate-200 rounded-xl shadow-lg w-full mt-2 max-h-56 overflow-y-auto">
+                <div className="absolute z-20 bg-white border border-slate-200 rounded-xl shadow-lg w-full mt-2 max-h-56 overflow-y-auto">
                   {suggestions.map((item) => (
                     <button
                       type="button"
@@ -293,24 +297,26 @@ export default function Inventory() {
               {message}
             </div>
           )}
-        </div>
+        </section>
 
-        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-6">
-            <div className="flex items-center gap-3">
-              <div className="bg-blue-100 text-blue-700 p-3 rounded-2xl">
+        <section className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 md:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5 md:mb-6">
+            <div className="flex items-start gap-3">
+              <div className="bg-blue-100 text-blue-700 p-3 rounded-2xl shrink-0">
                 <Package size={22} />
               </div>
 
               <div>
-                <h2 className="font-bold text-xl">Daftar Inventory</h2>
+                <h2 className="font-bold text-lg md:text-xl">
+                  Daftar Inventory
+                </h2>
                 <p className="text-sm text-slate-500">
                   Pantau bahan yang tersimpan dan status kadaluarsanya.
                 </p>
               </div>
             </div>
 
-            <span className="bg-slate-100 text-slate-600 px-4 py-2 rounded-full text-sm font-semibold">
+            <span className="bg-slate-100 text-slate-600 px-4 py-2 rounded-full text-sm font-semibold w-fit">
               {items.length} bahan
             </span>
           </div>
@@ -323,15 +329,15 @@ export default function Inventory() {
               return (
                 <div
                   key={item.id}
-                  className="border border-slate-200 rounded-2xl p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 hover:shadow-sm transition"
+                  className="border border-slate-200 rounded-2xl p-4 md:p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 hover:shadow-sm transition"
                 >
-                  <div className="flex items-start gap-4">
-                    <div className="bg-slate-100 text-slate-600 p-3 rounded-2xl">
-                      <Refrigerator size={22} />
+                  <div className="flex items-start gap-3 md:gap-4">
+                    <div className="bg-slate-100 text-slate-600 p-3 rounded-2xl shrink-0">
+                      <Refrigerator size={21} />
                     </div>
 
-                    <div>
-                      <h3 className="font-bold text-lg">
+                    <div className="min-w-0">
+                      <h3 className="font-bold text-base md:text-lg break-words">
                         {item.ingredient_name}
                       </h3>
 
@@ -339,8 +345,8 @@ export default function Inventory() {
                         {item.quantity} {item.unit}
                       </p>
 
-                      <div className="flex items-center gap-2 text-sm text-slate-500 mt-2">
-                        <CalendarDays size={16} />
+                      <div className="flex items-start gap-2 text-sm text-slate-500 mt-2">
+                        <CalendarDays size={16} className="shrink-0 mt-0.5" />
                         <span>
                           Expired:{' '}
                           {new Date(item.expired_at).toLocaleDateString(
@@ -365,7 +371,7 @@ export default function Inventory() {
 
                   <button
                     onClick={() => handleDelete(item.id)}
-                    className="inline-flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 px-4 py-2 rounded-xl font-semibold transition"
+                    className="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 px-4 py-2 rounded-xl font-semibold transition"
                   >
                     <Trash2 size={17} />
                     Hapus
@@ -375,21 +381,23 @@ export default function Inventory() {
             })}
 
             {items.length === 0 && (
-              <div className="text-center py-14">
+              <div className="text-center py-12 md:py-14">
                 <div className="mx-auto bg-slate-100 text-slate-500 w-16 h-16 rounded-2xl flex items-center justify-center">
                   <Package size={30} />
                 </div>
 
-                <h3 className="font-bold mt-4">Inventory masih kosong</h3>
+                <h3 className="font-bold mt-4">
+                  Inventory masih kosong
+                </h3>
 
-                <p className="text-slate-500 mt-1">
+                <p className="text-slate-500 mt-1 text-sm md:text-base">
                   Tambahkan bahan pertama agar sistem bisa membantu memantau
                   masa kadaluarsanya.
                 </p>
               </div>
             )}
           </div>
-        </div>
+        </section>
       </div>
     </UserLayout>
   );

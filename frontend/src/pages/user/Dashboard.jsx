@@ -14,15 +14,17 @@ import UserLayout from '../../layouts/UserLayout';
 
 function StatCard({ title, value, icon: Icon, color, bg }) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 hover:shadow-md transition">
-      <div className="flex justify-between items-start">
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 md:p-6 hover:shadow-md transition">
+      <div className="flex justify-between items-start gap-4">
         <div>
           <p className="text-slate-500 text-sm">{title}</p>
-          <h2 className="text-4xl font-bold mt-3">{value}</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mt-2 md:mt-3">
+            {value}
+          </h2>
         </div>
 
-        <div className={`${bg} ${color} p-3 rounded-2xl`}>
-          <Icon size={24} />
+        <div className={`${bg} ${color} p-3 rounded-2xl shrink-0`}>
+          <Icon size={22} />
         </div>
       </div>
     </div>
@@ -69,27 +71,27 @@ export default function Dashboard() {
 
   return (
     <UserLayout>
-      <div className="space-y-6">
-        <div className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-3xl shadow p-8 text-white">
+      <div className="space-y-5 md:space-y-6">
+        <section className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-3xl shadow p-5 md:p-8 text-white">
           <div className="max-w-3xl">
-            <p className="text-green-100 font-medium">
+            <p className="text-green-100 font-medium text-sm md:text-base">
               Smart Food Management
             </p>
 
-            <h1 className="text-3xl md:text-4xl font-bold mt-2">
+            <h1 className="text-2xl md:text-4xl font-bold mt-2 leading-tight">
               Halo, {user?.name}
             </h1>
 
-            <p className="text-green-50 mt-3 text-lg">
+            <p className="text-green-50 mt-3 text-sm md:text-lg leading-relaxed">
               Kamu memiliki {items.length} bahan di inventory,{' '}
               {soonExpiredItems.length} hampir expired, dan{' '}
               {expiredItems.length} sudah expired.
             </p>
 
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-5 md:mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Link
                 to="/inventory"
-                className="inline-flex items-center gap-2 bg-white text-green-700 px-5 py-3 rounded-xl font-semibold hover:bg-green-50 transition"
+                className="inline-flex items-center justify-center gap-2 bg-white text-green-700 px-5 py-3 rounded-xl font-semibold hover:bg-green-50 transition"
               >
                 <Plus size={18} />
                 Tambah Inventory
@@ -97,16 +99,16 @@ export default function Dashboard() {
 
               <Link
                 to="/recommendations"
-                className="inline-flex items-center gap-2 bg-green-800/30 border border-white/30 text-white px-5 py-3 rounded-xl font-semibold hover:bg-green-800/40 transition"
+                className="inline-flex items-center justify-center gap-2 bg-green-800/30 border border-white/30 text-white px-5 py-3 rounded-xl font-semibold hover:bg-green-800/40 transition"
               >
                 <ChefHat size={18} />
-                Lihat Rekomendasi AI
+                Rekomendasi AI
               </Link>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className="grid md:grid-cols-3 gap-4">
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           <StatCard
             title="Total Bahan"
             value={items.length}
@@ -130,42 +132,44 @@ export default function Dashboard() {
             color="text-red-700"
             bg="bg-red-100"
           />
-        </div>
+        </section>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+        <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 md:p-6">
           <div className="flex items-start gap-4">
-            <div className="bg-green-100 text-green-700 p-3 rounded-2xl">
-              <Bot size={24} />
+            <div className="bg-green-100 text-green-700 p-3 rounded-2xl shrink-0">
+              <Bot size={22} />
             </div>
 
             <div>
-              <h2 className="font-bold text-lg">Insight AI Hari Ini</h2>
+              <h2 className="font-bold text-base md:text-lg">
+                Insight AI Hari Ini
+              </h2>
 
               {attentionItems.length > 0 ? (
-                <p className="text-slate-600 mt-1">
+                <p className="text-slate-600 mt-1 text-sm md:text-base leading-relaxed">
                   Ada {attentionItems.length} bahan yang perlu segera
                   diperhatikan. Gunakan fitur rekomendasi AI untuk mencari ide
                   resep agar bahan tidak terbuang.
                 </p>
               ) : items.length === 0 ? (
-                <p className="text-slate-600 mt-1">
+                <p className="text-slate-600 mt-1 text-sm md:text-base leading-relaxed">
                   Inventory kamu masih kosong. Tambahkan bahan pertama agar AI
                   bisa membantu memberi rekomendasi resep.
                 </p>
               ) : (
-                <p className="text-slate-600 mt-1">
+                <p className="text-slate-600 mt-1 text-sm md:text-base leading-relaxed">
                   Semua bahan terlihat aman. Tetap pantau inventory secara rutin
                   agar bahan makanan tidak terbuang.
                 </p>
               )}
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-          <div className="flex justify-between items-center mb-5">
+        <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 md:p-6">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-5">
             <div>
-              <h2 className="font-bold text-lg">
+              <h2 className="font-bold text-base md:text-lg">
                 Bahan yang Perlu Diperhatikan
               </h2>
               <p className="text-sm text-slate-500">
@@ -189,7 +193,7 @@ export default function Dashboard() {
 
               <h3 className="font-bold mt-4">Semua bahan masih aman</h3>
 
-              <p className="text-slate-500 mt-1">
+              <p className="text-slate-500 mt-1 text-sm md:text-base">
                 Tidak ada bahan yang perlu perhatian khusus hari ini.
               </p>
             </div>
@@ -205,7 +209,7 @@ export default function Dashboard() {
                     className="border border-slate-200 rounded-2xl p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
                   >
                     <div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <h3 className="font-bold">
                           {item.ingredient_name}
                         </h3>
@@ -217,9 +221,7 @@ export default function Dashboard() {
                               : 'bg-yellow-100 text-yellow-700'
                           }`}
                         >
-                          {isExpired
-                            ? 'Expired'
-                            : `${diffDays} hari lagi`}
+                          {isExpired ? 'Expired' : `${diffDays} hari lagi`}
                         </span>
                       </div>
 
@@ -238,7 +240,7 @@ export default function Dashboard() {
 
                     <Link
                       to="/recommendations"
-                      className="bg-green-600 text-white px-4 py-2 rounded-xl text-sm font-semibold text-center hover:bg-green-700 transition"
+                      className="w-full md:w-auto bg-green-600 text-white px-4 py-2 rounded-xl text-sm font-semibold text-center hover:bg-green-700 transition"
                     >
                       Gunakan Sekarang
                     </Link>
@@ -247,7 +249,7 @@ export default function Dashboard() {
               })}
             </div>
           )}
-        </div>
+        </section>
       </div>
     </UserLayout>
   );

@@ -1,12 +1,22 @@
 import axios from 'axios';
 import pool from '../config/db.js';
 
+const AI_REQUEST_TIMEOUT = 20000;
+
 const getAiErrorMessage = (error) => {
   if (error.response?.status === 503) {
     return {
       status: 503,
       message:
         'AI sedang tidak aktif atau loading. Silakan coba lagi dalam beberapa saat.',
+    };
+  }
+
+  if (error.code === 'ECONNABORTED') {
+    return {
+      status: 504,
+      message:
+        'AI membutuhkan waktu terlalu lama untuk merespons. Silakan coba lagi.',
     };
   }
 
@@ -138,6 +148,9 @@ export const getRecommendations = async (req, res) => {
       {
         bahan_user: bahanUser,
         bahan_mau_basi: bahanMauBasi,
+      },
+      {
+        timeout: AI_REQUEST_TIMEOUT,
       }
     );
 
@@ -169,6 +182,9 @@ export const getManualRecommendations = async (req, res) => {
       {
         bahan_user,
         bahan_mau_basi,
+      },
+      {
+        timeout: AI_REQUEST_TIMEOUT,
       }
     );
 
@@ -200,6 +216,9 @@ export const getRecipeDetail = async (req, res) => {
       {
         nama_menu,
         bahan_resep,
+      },
+      {
+        timeout: AI_REQUEST_TIMEOUT,
       }
     );
 

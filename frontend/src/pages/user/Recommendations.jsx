@@ -9,6 +9,8 @@ import {
   Utensils,
   Wand2,
   ClipboardList,
+  LoaderCircle,
+  RefreshCcw,
 } from 'lucide-react';
 import api from '../../api/axios';
 import UserLayout from '../../layouts/UserLayout';
@@ -56,8 +58,8 @@ export default function Recommendations() {
     try {
       const response = await api.get('/inventory');
       const items = response.data.data || [];
-
       const today = new Date();
+
       today.setHours(0, 0, 0, 0);
 
       const filtered = items
@@ -102,15 +104,9 @@ export default function Recommendations() {
     }
   }, [fetchExpiringItems]);
 
-  const handleManualChange = (e) => {
-    setManualForm({
-      ...manualForm,
-      [e.target.name]: e.target.value,
-    });
-  };
-
   const handleManualRecommendation = async (e) => {
-    e.preventDefault();
+    e?.preventDefault();
+
     setMessage('');
     setRecipes([]);
 
@@ -136,6 +132,22 @@ export default function Recommendations() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleRetry = () => {
+    if (mode === 'auto') {
+      fetchAutoRecommendations();
+      return;
+    }
+
+    handleManualRecommendation();
+  };
+
+  const handleManualChange = (e) => {
+    setManualForm({
+      ...manualForm,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleModeChange = (selectedMode) => {
@@ -177,21 +189,19 @@ export default function Recommendations() {
     <UserLayout>
       <div className="space-y-6">
         <section className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-3xl shadow p-8 text-white">
-          <div className="max-w-3xl">
-            <p className="text-green-100 font-semibold flex items-center gap-2">
-              <Sparkles size={18} />
-              AI Recipe Assistant
-            </p>
+          <p className="text-green-100 font-semibold flex items-center gap-2">
+            <Sparkles size={18} />
+            AI Recipe Assistant
+          </p>
 
-            <h1 className="text-3xl md:text-4xl font-bold mt-3 leading-tight">
-              Cari Resep dari Bahan yang Kamu Punya
-            </h1>
+          <h1 className="text-3xl md:text-4xl font-bold mt-3 leading-tight">
+            Cari Resep dari Bahan yang Kamu Punya
+          </h1>
 
-            <p className="text-green-50 mt-3 text-lg">
-              Pilih bahan hampir expired dari inventory atau masukkan bahan
-              sendiri. AI akan membantu memberi ide resep yang mudah diikuti.
-            </p>
-          </div>
+          <p className="text-green-50 mt-3 text-lg max-w-3xl">
+            Pilih bahan hampir expired dari inventory atau masukkan bahan
+            sendiri. AI akan membantu memberi ide resep yang mudah diikuti.
+          </p>
         </section>
 
         <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-2 grid md:grid-cols-2 gap-2">
@@ -256,8 +266,11 @@ export default function Recommendations() {
                 <button
                   onClick={fetchAutoRecommendations}
                   disabled={loading}
-                  className="mt-6 w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 disabled:bg-slate-400"
+                  className="mt-6 w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 disabled:bg-slate-400 inline-flex items-center justify-center gap-2"
                 >
+                  {loading && (
+                    <LoaderCircle size={18} className="animate-spin" />
+                  )}
                   {loading ? 'AI sedang mencari...' : 'Cari Rekomendasi'}
                 </button>
               </div>
@@ -282,7 +295,6 @@ export default function Recommendations() {
                         <p className="font-semibold text-slate-800">
                           {item.ingredient_name}
                         </p>
-
                         <p className="text-sm text-slate-500">
                           {item.diffDays === 0
                             ? 'Expired hari ini'
@@ -303,6 +315,7 @@ export default function Recommendations() {
                 detailLoading={detailLoading}
                 getMatchLabel={getMatchLabel}
                 onDetail={handleRecipeDetail}
+                onRetry={handleRetry}
               />
             </main>
           </div>
@@ -314,11 +327,13 @@ export default function Recommendations() {
                   <Search size={24} />
                 </div>
 
-                <h2 className="font-bold text-xl mt-4">Input Bahan Sendiri</h2>
+                <h2 className="font-bold text-xl mt-4">
+                  Input Bahan Sendiri
+                </h2>
 
                 <p className="text-slate-600 text-sm mt-2">
-                  Masukkan bahan yang tersedia di rumah. Gunakan tanda koma agar
-                  AI lebih mudah membacanya.
+                  Masukkan bahan yang tersedia di rumah. Gunakan tanda koma
+                  agar AI lebih mudah membacanya.
                 </p>
 
                 <button
@@ -369,8 +384,11 @@ export default function Recommendations() {
 
                   <button
                     disabled={loading}
-                    className="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 disabled:bg-slate-400"
+                    className="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 disabled:bg-slate-400 inline-flex items-center justify-center gap-2"
                   >
+                    {loading && (
+                      <LoaderCircle size={18} className="animate-spin" />
+                    )}
                     {loading ? 'AI sedang mencari...' : 'Cari Resep'}
                   </button>
                 </form>
@@ -385,6 +403,7 @@ export default function Recommendations() {
                 detailLoading={detailLoading}
                 getMatchLabel={getMatchLabel}
                 onDetail={handleRecipeDetail}
+                onRetry={handleRetry}
               />
             </main>
           </div>
@@ -408,39 +427,10 @@ function RecommendationResult({
   detailLoading,
   getMatchLabel,
   onDetail,
+  onRetry,
 }) {
   if (loading) {
-    return (
-      <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8">
-        <div className="flex items-start gap-4">
-          <div className="bg-green-100 text-green-700 p-3 rounded-2xl animate-pulse">
-            <Wand2 size={24} />
-          </div>
-
-          <div>
-            <h2 className="font-bold text-xl">AI sedang menyusun resep...</h2>
-            <p className="text-slate-500 mt-1">
-              Tunggu sebentar, AI sedang mencocokkan bahan dengan resep yang
-              paling sesuai.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-4 mt-6">
-          {[1, 2].map((item) => (
-            <div
-              key={item}
-              className="border border-slate-100 rounded-2xl p-5 space-y-3"
-            >
-              <div className="h-4 bg-slate-100 rounded w-2/3" />
-              <div className="h-3 bg-slate-100 rounded w-full" />
-              <div className="h-3 bg-slate-100 rounded w-3/4" />
-              <div className="h-10 bg-slate-100 rounded-xl" />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    return <AiLoadingState />;
   }
 
   if (message) {
@@ -448,6 +438,14 @@ function RecommendationResult({
       <div className="bg-red-50 border border-red-200 text-red-700 rounded-3xl p-6">
         <p className="font-semibold">Rekomendasi belum bisa ditampilkan</p>
         <p className="text-sm mt-1">{message}</p>
+
+        <button
+          onClick={onRetry}
+          className="mt-4 inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-semibold text-sm"
+        >
+          <RefreshCcw size={16} />
+          Coba Lagi
+        </button>
       </div>
     );
   }
@@ -497,7 +495,9 @@ function RecommendationResult({
                 <ChefHat size={24} />
               </div>
 
-              <h2 className="text-xl font-bold mt-4">{recipe.nama_menu}</h2>
+              <h2 className="text-xl font-bold mt-4">
+                {recipe.nama_menu}
+              </h2>
 
               <p className="text-slate-600 mt-3 text-sm">
                 {recipe.bahan_resep}
@@ -526,6 +526,56 @@ function RecommendationResult({
             </div>
           );
         })}
+      </div>
+    </div>
+  );
+}
+
+function AiLoadingState() {
+  return (
+    <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 overflow-hidden">
+      <div className="flex items-start gap-4">
+        <div className="bg-green-100 text-green-700 p-3 rounded-2xl">
+          <Wand2 size={24} className="animate-pulse" />
+        </div>
+
+        <div>
+          <h2 className="font-bold text-xl">
+            AI sedang menyusun resep...
+          </h2>
+          <p className="text-slate-500 mt-1">
+            Sistem sedang mencocokkan bahan, menghitung kecocokan, dan
+            menyiapkan rekomendasi terbaik.
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-6 bg-green-50 border border-green-100 rounded-2xl p-4">
+        <div className="flex items-center gap-2 text-green-700 font-semibold">
+          <LoaderCircle size={18} className="animate-spin" />
+          Menganalisis bahan makanan...
+        </div>
+        <p className="text-sm text-slate-600 mt-1">
+          Proses ini mungkin membutuhkan beberapa detik jika AI sedang aktif
+          pertama kali.
+        </p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-4 mt-6">
+        {[1, 2].map((item) => (
+          <div
+            key={item}
+            className="border border-slate-100 rounded-2xl p-5 space-y-4"
+          >
+            <div className="w-12 h-12 bg-slate-100 rounded-2xl animate-pulse" />
+            <div className="h-5 bg-slate-100 rounded w-2/3 animate-pulse" />
+            <div className="space-y-2">
+              <div className="h-3 bg-slate-100 rounded w-full animate-pulse" />
+              <div className="h-3 bg-slate-100 rounded w-4/5 animate-pulse" />
+            </div>
+            <div className="h-10 bg-slate-100 rounded-xl animate-pulse" />
+          </div>
+        ))}
       </div>
     </div>
   );
