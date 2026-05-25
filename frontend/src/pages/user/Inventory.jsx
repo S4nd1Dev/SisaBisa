@@ -17,6 +17,8 @@ import UserLayout from '../../layouts/UserLayout';
 export default function Inventory() {
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState('');
+  const [inventorySearch, setInventorySearch] = useState('');
+  const [filter, setFilter] = useState('all');
   const [suggestions, setSuggestions] = useState([]);
   const [selectedIngredient, setSelectedIngredient] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
@@ -65,6 +67,7 @@ export default function Inventory() {
 
     if (diffDays < 0) {
       return {
+        key: 'expired',
         label: 'Expired',
         icon: AlertTriangle,
         className: 'bg-red-100 text-red-700',
@@ -73,6 +76,7 @@ export default function Inventory() {
 
     if (diffDays <= 3) {
       return {
+        key: 'soon',
         label: `${diffDays} hari lagi`,
         icon: AlertTriangle,
         className: 'bg-yellow-100 text-yellow-700',
@@ -80,11 +84,24 @@ export default function Inventory() {
     }
 
     return {
+      key: 'safe',
       label: 'Aman',
       icon: CheckCircle,
       className: 'bg-green-100 text-green-700',
     };
   };
+
+  const filteredItems = items.filter((item) => {
+    const status = getExpiryStatus(item.expired_at);
+
+    const matchesSearch = item.ingredient_name
+      .toLowerCase()
+      .includes(inventorySearch.toLowerCase());
+
+    const matchesFilter = filter === 'all' || status.key === filter;
+
+    return matchesSearch && matchesFilter;
+  });
 
   const handleSearch = async (value) => {
     setSearch(value);
@@ -173,6 +190,13 @@ export default function Inventory() {
     }
   };
 
+  const filterOptions = [
+    { label: 'Semua', value: 'all' },
+    { label: 'Aman', value: 'safe' },
+    { label: 'Hampir Expired', value: 'soon' },
+    { label: 'Expired', value: 'expired' },
+  ];
+
   return (
     <UserLayout>
       <div className="space-y-5 md:space-y-6">
@@ -212,9 +236,7 @@ export default function Inventory() {
             </div>
 
             <div>
-              <h2 className="font-bold text-lg md:text-xl">
-                Tambah Bahan
-              </h2>
+              <h2 className="font-bold text-lg md:text-xl">Tambah Bahan</h2>
               <p className="text-sm text-slate-500">
                 Cari bahan dari dataset lalu masukkan jumlah dan tanggal beli.
               </p>
@@ -316,18 +338,46 @@ export default function Inventory() {
                   Daftar Inventory
                 </h2>
                 <p className="text-sm text-slate-500">
-                  Pantau bahan yang tersimpan dan status kadaluarsanya.
+                  Menampilkan {filteredItems.length} dari {items.length} bahan.
                 </p>
               </div>
             </div>
 
             <span className="bg-slate-100 text-slate-600 px-4 py-2 rounded-full text-sm font-semibold w-fit">
-              {items.length} bahan
+              {filteredItems.length} hasil
             </span>
           </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_220px] gap-3 mb-5">
+            <div className="relative">
+              <Search
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+              />
+
+              <input
+                value={inventorySearch}
+                onChange={(e) => setInventorySearch(e.target.value)}
+                placeholder="Cari inventory..."
+                className="w-full border border-slate-200 rounded-xl pl-11 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
+
+            <select
+              value={filter}
+              onChange={(e) => setFilter(e.target.value)}
+              className="border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              {filterOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="space-y-3">
-            {items.map((item) => {
+            {filteredItems.map((item) => {
               const status = getExpiryStatus(item.expired_at);
               const StatusIcon = status.icon;
 
@@ -385,19 +435,18 @@ export default function Inventory() {
               );
             })}
 
-            {items.length === 0 && (
+            {filteredItems.length === 0 && (
               <div className="text-center py-12 md:py-14">
                 <div className="mx-auto bg-slate-100 text-slate-500 w-16 h-16 rounded-2xl flex items-center justify-center">
                   <Package size={30} />
                 </div>
 
                 <h3 className="font-bold mt-4">
-                  Inventory masih kosong
+                  Tidak ada inventory yang cocok
                 </h3>
 
                 <p className="text-slate-500 mt-1 text-sm md:text-base">
-                  Tambahkan bahan pertama agar sistem bisa membantu memantau
-                  masa kadaluarsanya.
+                  Coba ubah kata pencarian atau filter yang digunakan.
                 </p>
               </div>
             )}

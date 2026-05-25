@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import {
   Package,
   AlertTriangle,
@@ -35,19 +36,6 @@ export default function Dashboard() {
   const { user } = useAuth();
   const [items, setItems] = useState([]);
 
-  useEffect(() => {
-    const fetchInventory = async () => {
-      try {
-        const response = await api.get('/inventory');
-        setItems(response.data.data || []);
-      } catch (error) {
-        console.log(error.message);
-      }
-    };
-
-    fetchInventory();
-  }, []);
-
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -69,9 +57,92 @@ export default function Dashboard() {
 
   const attentionItems = [...expiredItems, ...soonExpiredItems];
 
+  useEffect(() => {
+    let ignore = false;
+
+    const fetchInventory = async () => {
+      try {
+        const response = await api.get('/inventory');
+        const data = response.data.data || [];
+
+        if (ignore) return;
+
+        setItems(data);
+
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+
+        const expiredCount = data.filter((item) => {
+          const expiredDate = new Date(item.expired_at);
+          expiredDate.setHours(0, 0, 0, 0);
+          return expiredDate < today;
+        }).length;
+
+        const soonCount = data.filter((item) => {
+          const expiredDate = new Date(item.expired_at);
+          expiredDate.setHours(0, 0, 0, 0);
+
+          const diffDays = Math.ceil(
+            (expiredDate - today) / (1000 * 60 * 60 * 24)
+          );
+
+          return diffDays >= 0 && diffDays <= 3;
+        }).length;
+
+        if (expiredCount > 0) {
+          toast.error(`${expiredCount} bahan sudah expired`);
+        } else if (soonCount > 0) {
+          toast(`${soonCount} bahan hampir expired`, {
+            icon: '⚠️',
+          });
+        }
+      } catch {
+        toast.error('Gagal memuat dashboard');
+      }
+    };
+
+    fetchInventory();
+
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
   return (
     <UserLayout>
       <div className="space-y-5 md:space-y-6">
+        {attentionItems.length > 0 && (
+          <section className="bg-yellow-50 border border-yellow-200 rounded-3xl p-5 md:p-6">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="flex items-start gap-4">
+                <div className="bg-yellow-100 text-yellow-700 p-3 rounded-2xl shrink-0">
+                  <AlertTriangle size={24} />
+                </div>
+
+                <div>
+                  <h2 className="font-bold text-yellow-900">
+                    Ada bahan yang perlu segera digunakan
+                  </h2>
+
+                  <p className="text-yellow-800 text-sm md:text-base mt-1">
+                    {expiredItems.length > 0 &&
+                      `${expiredItems.length} bahan sudah expired. `}
+                    {soonExpiredItems.length > 0 &&
+                      `${soonExpiredItems.length} bahan hampir expired.`}
+                  </p>
+                </div>
+              </div>
+
+              <Link
+                to="/recommendations"
+                className="bg-yellow-600 hover:bg-yellow-700 text-white px-5 py-3 rounded-xl font-semibold text-center"
+              >
+                Cari Resep AI
+              </Link>
+            </div>
+          </section>
+        )}
+
         <section className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-3xl shadow p-5 md:p-8 text-white">
           <div className="max-w-3xl">
             <p className="text-green-100 font-medium text-sm md:text-base">
