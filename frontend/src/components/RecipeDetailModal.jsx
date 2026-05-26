@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import {
   X,
   Clock,
@@ -22,8 +23,17 @@ export default function RecipeDetailModal({ recipe, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-end md:items-center justify-center md:px-4">
-      <div className="relative w-full md:max-w-4xl max-h-[92vh] md:max-h-[90vh] overflow-y-auto bg-white rounded-t-3xl md:rounded-3xl shadow-xl">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="fixed inset-0 z-50 bg-black/50 flex items-end md:items-center justify-center md:px-4"
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 40, scale: 0.96 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.25 }}
+        className="relative w-full md:max-w-4xl max-h-[92vh] md:max-h-[90vh] overflow-y-auto bg-white rounded-t-3xl md:rounded-3xl shadow-xl"
+      >
         <div className="sticky top-0 z-10 bg-white border-b px-4 md:px-6 py-4 flex justify-between items-start rounded-t-3xl">
           <div className="pr-4">
             <p className="text-green-700 font-semibold flex items-center gap-2 text-sm">
@@ -76,8 +86,11 @@ export default function RecipeDetailModal({ recipe, onClose }) {
             {steps.length > 0 ? (
               <div className="space-y-3">
                 {steps.map((step, index) => (
-                  <div
+                  <motion.div
                     key={index}
+                    initial={{ opacity: 0, x: -12 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.2, delay: index * 0.05 }}
                     className="border border-slate-200 rounded-2xl p-4 bg-white flex gap-3 md:gap-4"
                   >
                     <div className="bg-green-600 text-white w-8 h-8 rounded-full flex items-center justify-center font-bold shrink-0 text-sm">
@@ -87,7 +100,7 @@ export default function RecipeDetailModal({ recipe, onClose }) {
                     <p className="text-slate-700 leading-relaxed text-sm md:text-base">
                       {cleanStepText(step, index)}
                     </p>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             ) : (
@@ -179,8 +192,8 @@ export default function RecipeDetailModal({ recipe, onClose }) {
             Selesai
           </button>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 
@@ -193,9 +206,7 @@ function InfoCard({ icon: Icon, title, value, color }) {
 
       <div>
         <p className="text-slate-500 text-sm">{title}</p>
-        <h4 className="font-bold text-base md:text-lg">
-          {value}
-        </h4>
+        <h4 className="font-bold text-base md:text-lg">{value}</h4>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
 import {
   Package,
   AlertTriangle,
@@ -13,9 +14,15 @@ import api from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
 import UserLayout from '../../layouts/UserLayout';
 
-function StatCard({ title, value, icon: Icon, color, bg }) {
+function StatCard({ title, value, icon: Icon, color, bg, index }) {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 md:p-6 hover:shadow-md transition">
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, delay: index * 0.08 }}
+      whileHover={{ y: -4 }}
+      className="bg-white rounded-2xl shadow-sm border border-slate-100 p-4 md:p-6 hover:shadow-md transition"
+    >
       <div className="flex justify-between items-start gap-4">
         <div>
           <p className="text-slate-500 text-sm">{title}</p>
@@ -28,7 +35,7 @@ function StatCard({ title, value, icon: Icon, color, bg }) {
           <Icon size={22} />
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -112,7 +119,12 @@ export default function Dashboard() {
     <UserLayout>
       <div className="space-y-5 md:space-y-6">
         {attentionItems.length > 0 && (
-          <section className="bg-yellow-50 border border-yellow-200 rounded-3xl p-5 md:p-6">
+          <motion.section
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.25 }}
+            className="bg-yellow-50 border border-yellow-200 rounded-3xl p-5 md:p-6"
+          >
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="flex items-start gap-4">
                 <div className="bg-yellow-100 text-yellow-700 p-3 rounded-2xl shrink-0">
@@ -135,15 +147,20 @@ export default function Dashboard() {
 
               <Link
                 to="/recommendations"
-                className="bg-yellow-600 hover:bg-yellow-700 text-white px-5 py-3 rounded-xl font-semibold text-center"
+                className="bg-yellow-600 hover:bg-yellow-700 text-white px-5 py-3 rounded-xl font-semibold text-center transition"
               >
                 Cari Resep AI
               </Link>
             </div>
-          </section>
+          </motion.section>
         )}
 
-        <section className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-3xl shadow p-5 md:p-8 text-white">
+        <motion.section
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.28 }}
+          className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-3xl shadow p-5 md:p-8 text-white"
+        >
           <div className="max-w-3xl">
             <p className="text-green-100 font-medium text-sm md:text-base">
               Smart Food Management
@@ -177,7 +194,7 @@ export default function Dashboard() {
               </Link>
             </div>
           </div>
-        </section>
+        </motion.section>
 
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
           <StatCard
@@ -186,6 +203,7 @@ export default function Dashboard() {
             icon={Package}
             color="text-blue-700"
             bg="bg-blue-100"
+            index={0}
           />
 
           <StatCard
@@ -194,6 +212,7 @@ export default function Dashboard() {
             icon={AlertTriangle}
             color="text-yellow-700"
             bg="bg-yellow-100"
+            index={1}
           />
 
           <StatCard
@@ -202,10 +221,16 @@ export default function Dashboard() {
             icon={CheckCircle}
             color="text-red-700"
             bg="bg-red-100"
+            index={2}
           />
         </section>
 
-        <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 md:p-6">
+        <motion.section
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25, delay: 0.18 }}
+          className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 md:p-6"
+        >
           <div className="flex items-start gap-4">
             <div className="bg-green-100 text-green-700 p-3 rounded-2xl shrink-0">
               <Bot size={22} />
@@ -235,9 +260,14 @@ export default function Dashboard() {
               )}
             </div>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 md:p-6">
+        <motion.section
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25, delay: 0.24 }}
+          className="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 md:p-6"
+        >
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-5">
             <div>
               <h2 className="font-bold text-base md:text-lg">
@@ -270,13 +300,17 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="space-y-3">
-              {attentionItems.map((item) => {
+              {attentionItems.map((item, index) => {
                 const diffDays = getDiffDays(item.expired_at);
                 const isExpired = diffDays < 0;
 
                 return (
-                  <div
+                  <motion.div
                     key={item.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.2, delay: index * 0.05 }}
+                    whileHover={{ y: -2 }}
                     className="border border-slate-200 rounded-2xl p-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
                   >
                     <div>
@@ -315,12 +349,12 @@ export default function Dashboard() {
                     >
                       Gunakan Sekarang
                     </Link>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
           )}
-        </section>
+        </motion.section>
       </div>
     </UserLayout>
   );

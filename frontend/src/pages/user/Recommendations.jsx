@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { useState, useCallback } from 'react';
 import {
   Bot,
@@ -79,8 +80,8 @@ export default function Recommendations() {
         .filter((item) => item.diffDays >= 0 && item.diffDays <= 3);
 
       setExpiringItems(filtered);
-    } catch (error) {
-      console.log(error.message);
+    } catch {
+      console.log('Gagal mengambil bahan hampir expired');
     }
   }, []);
 
@@ -187,27 +188,27 @@ export default function Recommendations() {
 
   return (
     <UserLayout>
-      <div className="space-y-6">
-        <section className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-3xl shadow p-8 text-white">
-          <p className="text-green-100 font-semibold flex items-center gap-2">
+      <div className="space-y-5 md:space-y-6">
+        <section className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-3xl shadow p-5 md:p-8 text-white">
+          <p className="text-green-100 font-semibold flex items-center gap-2 text-sm md:text-base">
             <Sparkles size={18} />
             AI Recipe Assistant
           </p>
 
-          <h1 className="text-3xl md:text-4xl font-bold mt-3 leading-tight">
+          <h1 className="text-2xl md:text-4xl font-bold mt-3 leading-tight">
             Cari Resep dari Bahan yang Kamu Punya
           </h1>
 
-          <p className="text-green-50 mt-3 text-lg max-w-3xl">
+          <p className="text-green-50 mt-3 text-sm md:text-lg max-w-3xl leading-relaxed">
             Pilih bahan hampir expired dari inventory atau masukkan bahan
             sendiri. AI akan membantu memberi ide resep yang mudah diikuti.
           </p>
         </section>
 
-        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-2 grid md:grid-cols-2 gap-2">
+        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
           <button
             onClick={() => handleModeChange('auto')}
-            className={`py-4 rounded-2xl font-semibold transition flex items-center justify-center gap-2 ${
+            className={`py-3 md:py-4 rounded-2xl font-semibold transition flex items-center justify-center gap-2 ${
               mode === 'auto'
                 ? 'bg-green-600 text-white shadow'
                 : 'text-slate-600 hover:bg-slate-100'
@@ -219,7 +220,7 @@ export default function Recommendations() {
 
           <button
             onClick={() => handleModeChange('manual')}
-            className={`py-4 rounded-2xl font-semibold transition flex items-center justify-center gap-2 ${
+            className={`py-3 md:py-4 rounded-2xl font-semibold transition flex items-center justify-center gap-2 ${
               mode === 'manual'
                 ? 'bg-green-600 text-white shadow'
                 : 'text-slate-600 hover:bg-slate-100'
@@ -231,35 +232,35 @@ export default function Recommendations() {
         </div>
 
         {mode === 'auto' ? (
-          <div className="grid lg:grid-cols-3 gap-6">
-            <aside className="lg:col-span-1 space-y-6">
-              <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
-                <div className="bg-green-100 text-green-700 w-12 h-12 rounded-2xl flex items-center justify-center">
-                  <Bot size={24} />
+          <div className="grid lg:grid-cols-3 gap-5 md:gap-6">
+            <aside className="lg:col-span-1 space-y-5 md:space-y-6">
+              <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 md:p-6">
+                <div className="bg-green-100 text-green-700 w-11 h-11 md:w-12 md:h-12 rounded-2xl flex items-center justify-center">
+                  <Bot size={23} />
                 </div>
 
-                <h2 className="font-bold text-xl mt-4">
+                <h2 className="font-bold text-lg md:text-xl mt-4">
                   Rekomendasi Otomatis
                 </h2>
 
-                <p className="text-slate-600 text-sm mt-2">
+                <p className="text-slate-600 text-sm mt-2 leading-relaxed">
                   Cocok saat kamu ingin memakai bahan yang mendekati expired
                   tanpa perlu mengetik manual.
                 </p>
 
                 <div className="mt-5 space-y-3 text-sm text-slate-600">
                   <div className="flex gap-3">
-                    <span className="bg-green-100 text-green-700 w-7 h-7 rounded-full flex items-center justify-center font-bold">
+                    <span className="bg-green-100 text-green-700 w-7 h-7 rounded-full flex items-center justify-center font-bold shrink-0">
                       1
                     </span>
-                    Sistem membaca inventory kamu.
+                    <span>Sistem membaca inventory kamu.</span>
                   </div>
 
                   <div className="flex gap-3">
-                    <span className="bg-green-100 text-green-700 w-7 h-7 rounded-full flex items-center justify-center font-bold">
+                    <span className="bg-green-100 text-green-700 w-7 h-7 rounded-full flex items-center justify-center font-bold shrink-0">
                       2
                     </span>
-                    AI mencari resep dari bahan prioritas.
+                    <span>AI mencari resep dari bahan prioritas.</span>
                   </div>
                 </div>
 
@@ -276,7 +277,7 @@ export default function Recommendations() {
               </div>
 
               {expiringItems.length > 0 && (
-                <div className="bg-yellow-50 border border-yellow-200 rounded-3xl p-6">
+                <div className="bg-yellow-50 border border-yellow-200 rounded-3xl p-5 md:p-6">
                   <div className="flex items-center gap-2 text-yellow-800 font-bold">
                     <AlertTriangle size={20} />
                     Bahan Prioritas
@@ -320,20 +321,20 @@ export default function Recommendations() {
             </main>
           </div>
         ) : (
-          <div className="grid lg:grid-cols-3 gap-6">
+          <div className="grid lg:grid-cols-3 gap-5 md:gap-6">
             <aside className="lg:col-span-1">
-              <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6">
-                <div className="bg-blue-100 text-blue-700 w-12 h-12 rounded-2xl flex items-center justify-center">
-                  <Search size={24} />
+              <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 md:p-6">
+                <div className="bg-blue-100 text-blue-700 w-11 h-11 md:w-12 md:h-12 rounded-2xl flex items-center justify-center">
+                  <Search size={23} />
                 </div>
 
-                <h2 className="font-bold text-xl mt-4">
+                <h2 className="font-bold text-lg md:text-xl mt-4">
                   Input Bahan Sendiri
                 </h2>
 
-                <p className="text-slate-600 text-sm mt-2">
-                  Masukkan bahan yang tersedia di rumah. Gunakan tanda koma
-                  agar AI lebih mudah membacanya.
+                <p className="text-slate-600 text-sm mt-2 leading-relaxed">
+                  Masukkan bahan yang tersedia di rumah. Gunakan tanda koma agar
+                  AI lebih mudah membacanya.
                 </p>
 
                 <button
@@ -358,7 +359,7 @@ export default function Recommendations() {
                       value={manualForm.bahan_user}
                       onChange={handleManualChange}
                       placeholder="Contoh: telur ayam, bawang merah, cabai, nasi, garam"
-                      className="w-full border border-slate-200 rounded-xl px-4 py-3 min-h-32 focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full border border-slate-200 rounded-xl px-4 py-3 min-h-28 md:min-h-32 focus:outline-none focus:ring-2 focus:ring-green-500"
                       required
                     />
                   </div>
@@ -435,13 +436,13 @@ function RecommendationResult({
 
   if (message) {
     return (
-      <div className="bg-red-50 border border-red-200 text-red-700 rounded-3xl p-6">
+      <div className="bg-red-50 border border-red-200 text-red-700 rounded-3xl p-5 md:p-6">
         <p className="font-semibold">Rekomendasi belum bisa ditampilkan</p>
-        <p className="text-sm mt-1">{message}</p>
+        <p className="text-sm mt-1 leading-relaxed">{message}</p>
 
         <button
           onClick={onRetry}
-          className="mt-4 inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-semibold text-sm"
+          className="mt-4 w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl font-semibold text-sm"
         >
           <RefreshCcw size={16} />
           Coba Lagi
@@ -452,14 +453,16 @@ function RecommendationResult({
 
   if (recipes.length === 0) {
     return (
-      <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-10 text-center">
-        <div className="mx-auto bg-slate-100 text-slate-500 w-16 h-16 rounded-2xl flex items-center justify-center">
-          <Utensils size={30} />
+      <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 md:p-10 text-center">
+        <div className="mx-auto bg-slate-100 text-slate-500 w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center">
+          <Utensils size={28} />
         </div>
 
-        <h2 className="font-bold text-xl mt-4">Belum ada rekomendasi</h2>
+        <h2 className="font-bold text-lg md:text-xl mt-4">
+          Belum ada rekomendasi
+        </h2>
 
-        <p className="text-slate-500 mt-2 max-w-md mx-auto">
+        <p className="text-slate-500 mt-2 max-w-md mx-auto text-sm md:text-base leading-relaxed">
           Pilih mode rekomendasi, lalu klik tombol pencarian resep. Hasil resep
           akan muncul di sini.
         </p>
@@ -469,52 +472,62 @@ function RecommendationResult({
 
   return (
     <div>
-      <div className="flex items-center gap-3 mb-4">
-        <div className="bg-green-100 text-green-700 p-2 rounded-xl">
+      <div className="flex items-start gap-3 mb-4">
+        <div className="bg-green-100 text-green-700 p-2 rounded-xl shrink-0">
           <ClipboardList size={20} />
         </div>
 
         <div>
-          <h2 className="font-bold text-xl">Hasil Rekomendasi</h2>
+          <h2 className="font-bold text-lg md:text-xl">
+            Hasil Rekomendasi
+          </h2>
           <p className="text-sm text-slate-500">
             Pilih salah satu resep untuk melihat langkah memasaknya.
           </p>
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {recipes.map((recipe, index) => {
           const match = getMatchLabel(recipe.persentase_kecocokan);
 
           return (
-            <div
-              key={index}
-              className="bg-white rounded-3xl shadow-sm border border-slate-100 p-6 hover:shadow-md transition"
-            >
-              <div className="bg-green-100 text-green-700 w-12 h-12 rounded-2xl flex items-center justify-center">
-                <ChefHat size={24} />
+            <motion.div
+  key={index}
+  initial={{ opacity: 0, y: 16 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.25, delay: index * 0.08 }}
+  whileHover={{ y: -4 }}
+  className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 md:p-6 hover:shadow-md transition"
+>
+              <div className="flex items-start gap-3">
+                <div className="bg-green-100 text-green-700 w-11 h-11 md:w-12 md:h-12 rounded-2xl flex items-center justify-center shrink-0">
+                  <ChefHat size={23} />
+                </div>
+
+                <div>
+                  <h2 className="text-lg md:text-xl font-bold leading-tight">
+                    {recipe.nama_menu}
+                  </h2>
+
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs md:text-sm font-semibold ${match.color}`}
+                    >
+                      {match.label}
+                    </span>
+
+                    <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-xs md:text-sm font-semibold inline-flex items-center gap-1">
+                      <Clock size={14} />
+                      Mudah diikuti
+                    </span>
+                  </div>
+                </div>
               </div>
 
-              <h2 className="text-xl font-bold mt-4">
-                {recipe.nama_menu}
-              </h2>
-
-              <p className="text-slate-600 mt-3 text-sm">
+              <p className="text-slate-600 mt-4 text-sm leading-relaxed">
                 {recipe.bahan_resep}
               </p>
-
-              <div className="mt-4 flex flex-wrap gap-2">
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-semibold ${match.color}`}
-                >
-                  {match.label}
-                </span>
-
-                <span className="bg-slate-100 text-slate-600 px-3 py-1 rounded-full text-sm font-semibold inline-flex items-center gap-1">
-                  <Clock size={14} />
-                  Mudah diikuti
-                </span>
-              </div>
 
               <button
                 onClick={() => onDetail(recipe)}
@@ -523,7 +536,7 @@ function RecommendationResult({
               >
                 {detailLoading ? 'Memuat Detail...' : 'Lihat Cara Memasak'}
               </button>
-            </div>
+            </motion.div>
           );
         })}
       </div>
@@ -533,25 +546,25 @@ function RecommendationResult({
 
 function AiLoadingState() {
   return (
-    <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 overflow-hidden">
+    <div className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 md:p-8 overflow-hidden">
       <div className="flex items-start gap-4">
-        <div className="bg-green-100 text-green-700 p-3 rounded-2xl">
+        <div className="bg-green-100 text-green-700 p-3 rounded-2xl shrink-0">
           <Wand2 size={24} className="animate-pulse" />
         </div>
 
         <div>
-          <h2 className="font-bold text-xl">
+          <h2 className="font-bold text-lg md:text-xl">
             AI sedang menyusun resep...
           </h2>
-          <p className="text-slate-500 mt-1">
+          <p className="text-slate-500 mt-1 text-sm md:text-base leading-relaxed">
             Sistem sedang mencocokkan bahan, menghitung kecocokan, dan
             menyiapkan rekomendasi terbaik.
           </p>
         </div>
       </div>
 
-      <div className="mt-6 bg-green-50 border border-green-100 rounded-2xl p-4">
-        <div className="flex items-center gap-2 text-green-700 font-semibold">
+      <div className="mt-5 md:mt-6 bg-green-50 border border-green-100 rounded-2xl p-4">
+        <div className="flex items-center gap-2 text-green-700 font-semibold text-sm md:text-base">
           <LoaderCircle size={18} className="animate-spin" />
           Menganalisis bahan makanan...
         </div>
@@ -561,7 +574,7 @@ function AiLoadingState() {
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4 mt-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-5 md:mt-6">
         {[1, 2].map((item) => (
           <div
             key={item}
