@@ -10,6 +10,7 @@ import {
   HeartPulse,
   Package,
   Eye,
+  Search,
 } from 'lucide-react';
 import api from '../../api/axios';
 import UserLayout from '../../layouts/UserLayout';
@@ -20,6 +21,8 @@ export default function FavoriteRecipes() {
   const [favorites, setFavorites] = useState([]);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const [search, setSearch] = useState('');
+  const [difficultyFilter, setDifficultyFilter] = useState('all');
 
   const fetchFavorites = async () => {
     const response = await api.get('/favorites');
@@ -45,17 +48,29 @@ export default function FavoriteRecipes() {
     };
   }, []);
 
-  const mapFavoriteToRecipe = (recipe) => {
-    return {
-      nama_menu: recipe.recipe_name,
-      bahan_resep: recipe.ingredients,
-      langkah_memasak: recipe.cooking_steps || [],
-      nutrisi: recipe.nutrition || {},
-      waktu_masak: recipe.cooking_time,
-      tingkat_kesulitan: recipe.difficulty,
-      insight_kesehatan: recipe.health_insight,
-    };
-  };
+  const filteredFavorites = favorites.filter((recipe) => {
+    const keyword = search.toLowerCase();
+
+    const matchesSearch =
+      recipe.recipe_name?.toLowerCase().includes(keyword) ||
+      recipe.ingredients?.toLowerCase().includes(keyword);
+
+    const matchesDifficulty =
+      difficultyFilter === 'all' ||
+      recipe.difficulty?.toLowerCase() === difficultyFilter;
+
+    return matchesSearch && matchesDifficulty;
+  });
+
+  const mapFavoriteToRecipe = (recipe) => ({
+    nama_menu: recipe.recipe_name,
+    bahan_resep: recipe.ingredients,
+    langkah_memasak: recipe.cooking_steps || [],
+    nutrisi: recipe.nutrition || {},
+    waktu_masak: recipe.cooking_time,
+    tingkat_kesulitan: recipe.difficulty,
+    insight_kesehatan: recipe.health_insight,
+  });
 
   const handleOpenDetail = (recipe) => {
     setSelectedRecipe(mapFavoriteToRecipe(recipe));
@@ -95,12 +110,47 @@ export default function FavoriteRecipes() {
           </h1>
 
           <p className="text-green-50 mt-3 max-w-2xl text-sm md:text-base leading-relaxed">
-            Lihat kembali resep AI yang sudah kamu simpan untuk dimasak nanti.
+            Kamu memiliki {favorites.length} resep favorit yang bisa dibuka
+            kembali kapan saja.
           </p>
         </motion.section>
 
+        <section className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 md:p-6">
+          <div className="grid grid-cols-1 md:grid-cols-[1fr_220px] gap-3">
+            <div className="relative">
+              <Search
+                size={18}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+              />
+
+              <input
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Cari nama resep atau bahan..."
+                className="w-full border border-slate-200 rounded-xl pl-11 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
+
+            <select
+              value={difficultyFilter}
+              onChange={(e) => setDifficultyFilter(e.target.value)}
+              className="border border-slate-200 rounded-xl px-4 py-3 text-sm font-semibold text-slate-600 focus:outline-none focus:ring-2 focus:ring-green-500"
+            >
+              <option value="all">Semua Kesulitan</option>
+              <option value="mudah">Mudah</option>
+              <option value="sedang">Sedang</option>
+              <option value="sulit">Sulit</option>
+            </select>
+          </div>
+
+          <p className="text-sm text-slate-500 mt-3">
+            Menampilkan {filteredFavorites.length} dari {favorites.length}{' '}
+            resep favorit.
+          </p>
+        </section>
+
         <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {favorites.map((recipe, index) => (
+          {filteredFavorites.map((recipe, index) => (
             <motion.div
               key={recipe.id}
               initial={{ opacity: 0, y: 14 }}
@@ -187,7 +237,7 @@ export default function FavoriteRecipes() {
           ))}
         </section>
 
-        {favorites.length === 0 && (
+        {filteredFavorites.length === 0 && (
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
@@ -198,12 +248,11 @@ export default function FavoriteRecipes() {
             </div>
 
             <h2 className="font-bold text-xl mt-4">
-              Belum ada resep favorit
+              Tidak ada resep yang cocok
             </h2>
 
             <p className="text-slate-500 mt-2">
-              Simpan resep dari halaman rekomendasi agar bisa dibuka kembali di
-              sini.
+              Coba ubah kata pencarian atau filter yang digunakan.
             </p>
           </motion.div>
         )}

@@ -9,6 +9,7 @@ import {
   Bot,
   ChefHat,
   Plus,
+  Bookmark,
 } from 'lucide-react';
 import api from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
@@ -42,6 +43,7 @@ function StatCard({ title, value, icon: Icon, color, bg, index }) {
 export default function Dashboard() {
   const { user } = useAuth();
   const [items, setItems] = useState([]);
+  const [favoriteCount, setFavoriteCount] = useState(0);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -67,25 +69,31 @@ export default function Dashboard() {
   useEffect(() => {
     let ignore = false;
 
-    const fetchInventory = async () => {
+    const fetchDashboardData = async () => {
       try {
-        const response = await api.get('/inventory');
-        const data = response.data.data || [];
+        const [inventoryResponse, favoriteResponse] = await Promise.all([
+          api.get('/inventory'),
+          api.get('/favorites'),
+        ]);
+
+        const inventoryData = inventoryResponse.data.data || [];
+        const favoriteData = favoriteResponse.data.data || [];
 
         if (ignore) return;
 
-        setItems(data);
+        setItems(inventoryData);
+        setFavoriteCount(favoriteData.length);
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
 
-        const expiredCount = data.filter((item) => {
+        const expiredCount = inventoryData.filter((item) => {
           const expiredDate = new Date(item.expired_at);
           expiredDate.setHours(0, 0, 0, 0);
           return expiredDate < today;
         }).length;
 
-        const soonCount = data.filter((item) => {
+        const soonCount = inventoryData.filter((item) => {
           const expiredDate = new Date(item.expired_at);
           expiredDate.setHours(0, 0, 0, 0);
 
@@ -108,7 +116,7 @@ export default function Dashboard() {
       }
     };
 
-    fetchInventory();
+    fetchDashboardData();
 
     return () => {
       ignore = true;
@@ -172,11 +180,12 @@ export default function Dashboard() {
 
             <p className="text-green-50 mt-3 text-sm md:text-lg leading-relaxed">
               Kamu memiliki {items.length} bahan di inventory,{' '}
-              {soonExpiredItems.length} hampir expired, dan{' '}
-              {expiredItems.length} sudah expired.
+              {soonExpiredItems.length} hampir expired,{' '}
+              {expiredItems.length} sudah expired, dan {favoriteCount} resep
+              favorit tersimpan.
             </p>
 
-            <div className="mt-5 md:mt-6 grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="mt-5 md:mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
               <Link
                 to="/inventory"
                 className="inline-flex items-center justify-center gap-2 bg-white text-green-700 px-5 py-3 rounded-xl font-semibold hover:bg-green-50 transition"
@@ -192,11 +201,19 @@ export default function Dashboard() {
                 <ChefHat size={18} />
                 Rekomendasi AI
               </Link>
+
+              <Link
+                to="/favorites"
+                className="inline-flex items-center justify-center gap-2 bg-white/15 border border-white/30 text-white px-5 py-3 rounded-xl font-semibold hover:bg-white/20 transition"
+              >
+                <Bookmark size={18} />
+                Favorit
+              </Link>
             </div>
           </div>
         </motion.section>
 
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
           <StatCard
             title="Total Bahan"
             value={items.length}
@@ -222,6 +239,15 @@ export default function Dashboard() {
             color="text-red-700"
             bg="bg-red-100"
             index={2}
+          />
+
+          <StatCard
+            title="Resep Favorit"
+            value={favoriteCount}
+            icon={Bookmark}
+            color="text-green-700"
+            bg="bg-green-100"
+            index={3}
           />
         </section>
 
@@ -251,6 +277,11 @@ export default function Dashboard() {
                 <p className="text-slate-600 mt-1 text-sm md:text-base leading-relaxed">
                   Inventory kamu masih kosong. Tambahkan bahan pertama agar AI
                   bisa membantu memberi rekomendasi resep.
+                </p>
+              ) : favoriteCount > 0 ? (
+                <p className="text-slate-600 mt-1 text-sm md:text-base leading-relaxed">
+                  Semua bahan terlihat aman. Kamu juga sudah menyimpan{' '}
+                  {favoriteCount} resep favorit yang bisa digunakan kembali.
                 </p>
               ) : (
                 <p className="text-slate-600 mt-1 text-sm md:text-base leading-relaxed">
