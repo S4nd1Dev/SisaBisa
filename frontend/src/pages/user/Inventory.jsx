@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
 import DeleteConfirmModal from '../../components/DeleteConfirmModal';
 import {
   Search,
@@ -200,7 +201,12 @@ export default function Inventory() {
   return (
     <UserLayout>
       <div className="space-y-5 md:space-y-6">
-        <section className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-3xl shadow p-5 md:p-8 text-white">
+        <motion.section
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.28 }}
+          className="bg-gradient-to-r from-green-600 to-emerald-500 rounded-3xl shadow p-5 md:p-8 text-white"
+        >
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 md:gap-6">
             <div>
               <p className="text-green-100 font-medium text-sm md:text-base">
@@ -217,7 +223,10 @@ export default function Inventory() {
               </p>
             </div>
 
-            <div className="bg-white/20 border border-white/30 rounded-2xl p-4 md:p-5 md:min-w-40">
+            <motion.div
+              whileHover={{ scale: 1.03 }}
+              className="bg-white/20 border border-white/30 rounded-2xl p-4 md:p-5 md:min-w-40"
+            >
               <p className="text-green-50 text-sm">Total Inventory</p>
               <h2 className="text-3xl md:text-4xl font-bold mt-1">
                 {items.length}
@@ -225,11 +234,16 @@ export default function Inventory() {
               <p className="text-green-50 text-sm mt-1">
                 bahan tersimpan
               </p>
-            </div>
+            </motion.div>
           </div>
-        </section>
+        </motion.section>
 
-        <section className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 md:p-6">
+        <motion.section
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25, delay: 0.08 }}
+          className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 md:p-6"
+        >
           <div className="flex items-start gap-3 mb-5 md:mb-6">
             <div className="bg-green-100 text-green-700 p-3 rounded-2xl shrink-0">
               <Plus size={22} />
@@ -262,7 +276,11 @@ export default function Inventory() {
               />
 
               {suggestions.length > 0 && (
-                <div className="absolute z-20 bg-white border border-slate-200 rounded-xl shadow-lg w-full mt-2 max-h-56 overflow-y-auto">
+                <motion.div
+                  initial={{ opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute z-20 bg-white border border-slate-200 rounded-xl shadow-lg w-full mt-2 max-h-56 overflow-y-auto"
+                >
                   {suggestions.map((item) => (
                     <button
                       type="button"
@@ -276,7 +294,7 @@ export default function Inventory() {
                       </div>
                     </button>
                   ))}
-                </div>
+                </motion.div>
               )}
             </div>
 
@@ -320,13 +338,18 @@ export default function Inventory() {
               required
             />
 
-            <button className="md:col-span-2 bg-green-600 hover:bg-green-700 transition text-white py-3 rounded-xl font-semibold">
+            <button className="md:col-span-2 bg-green-600 hover:bg-green-700 active:scale-[0.99] transition text-white py-3 rounded-xl font-semibold">
               Tambah ke Inventory
             </button>
           </form>
-        </section>
+        </motion.section>
 
-        <section className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 md:p-6">
+        <motion.section
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.25, delay: 0.14 }}
+          className="bg-white rounded-3xl shadow-sm border border-slate-100 p-5 md:p-6"
+        >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5 md:mb-6">
             <div className="flex items-start gap-3">
               <div className="bg-blue-100 text-blue-700 p-3 rounded-2xl shrink-0">
@@ -377,14 +400,18 @@ export default function Inventory() {
           </div>
 
           <div className="space-y-3">
-            {filteredItems.map((item) => {
+            {filteredItems.map((item, index) => {
               const status = getExpiryStatus(item.expired_at);
               const StatusIcon = status.icon;
 
               return (
-                <div
+                <motion.div
                   key={item.id}
-                  className="border border-slate-200 rounded-2xl p-4 md:p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 hover:shadow-sm transition"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.22, delay: index * 0.04 }}
+                  whileHover={{ y: -3 }}
+                  className="border border-slate-200 rounded-2xl p-4 md:p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4 hover:shadow-sm transition bg-white"
                 >
                   <div className="flex items-start gap-3 md:gap-4">
                     <div className="bg-slate-100 text-slate-600 p-3 rounded-2xl shrink-0">
@@ -426,17 +453,21 @@ export default function Inventory() {
 
                   <button
                     onClick={() => setDeleteTarget(item)}
-                    className="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 text-red-700 px-4 py-2 rounded-xl font-semibold transition"
+                    className="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 active:scale-[0.98] text-red-700 px-4 py-2 rounded-xl font-semibold transition"
                   >
                     <Trash2 size={17} />
                     Hapus
                   </button>
-                </div>
+                </motion.div>
               );
             })}
 
             {filteredItems.length === 0 && (
-              <div className="text-center py-12 md:py-14">
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-center py-12 md:py-14"
+              >
                 <div className="mx-auto bg-slate-100 text-slate-500 w-16 h-16 rounded-2xl flex items-center justify-center">
                   <Package size={30} />
                 </div>
@@ -448,10 +479,10 @@ export default function Inventory() {
                 <p className="text-slate-500 mt-1 text-sm md:text-base">
                   Coba ubah kata pencarian atau filter yang digunakan.
                 </p>
-              </div>
+              </motion.div>
             )}
           </div>
-        </section>
+        </motion.section>
 
         {deleteTarget && (
           <DeleteConfirmModal
