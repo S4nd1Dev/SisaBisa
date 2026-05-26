@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import {
   X,
@@ -10,9 +12,14 @@ import {
   Droplets,
   Leaf,
   ChefHat,
+  Bookmark,
+  LoaderCircle,
 } from 'lucide-react';
+import api from '../api/axios';
 
 export default function RecipeDetailModal({ recipe, onClose }) {
+  const [saving, setSaving] = useState(false);
+
   if (!recipe) return null;
 
   const steps = recipe.langkah_memasak || [];
@@ -20,6 +27,30 @@ export default function RecipeDetailModal({ recipe, onClose }) {
 
   const cleanStepText = (step, index) => {
     return step.replace(new RegExp(`^${index + 1}\\.\\s*`), '');
+  };
+
+  const handleSaveRecipe = async () => {
+    try {
+      setSaving(true);
+
+      await api.post('/favorites', {
+        recipe_name: recipe.nama_menu,
+        ingredients: recipe.bahan_resep,
+        cooking_steps: steps,
+        nutrition,
+        cooking_time: recipe.waktu_masak,
+        difficulty: recipe.tingkat_kesulitan,
+        health_insight: recipe.insight_kesehatan,
+      });
+
+      toast.success('Resep berhasil disimpan');
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || 'Gagal menyimpan resep'
+      );
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -54,7 +85,7 @@ export default function RecipeDetailModal({ recipe, onClose }) {
           </button>
         </div>
 
-        <div className="p-4 md:p-6 space-y-5 pb-24 md:pb-6">
+        <div className="p-4 md:p-6 space-y-5 pb-28 md:pb-6">
           <section className="bg-green-50 border border-green-100 rounded-2xl md:rounded-3xl p-4 md:p-5">
             <h3 className="font-bold mb-2">Bahan yang Digunakan</h3>
             <p className="text-slate-700 leading-relaxed text-sm md:text-base">
@@ -118,40 +149,11 @@ export default function RecipeDetailModal({ recipe, onClose }) {
             </h3>
 
             <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4">
-              <NutritionCard
-                icon={Flame}
-                title="Kalori"
-                value={nutrition.kalori}
-                color="bg-red-100 text-red-700"
-              />
-
-              <NutritionCard
-                icon={Dumbbell}
-                title="Protein"
-                value={nutrition.protein}
-                color="bg-blue-100 text-blue-700"
-              />
-
-              <NutritionCard
-                icon={Droplets}
-                title="Lemak"
-                value={nutrition.lemak}
-                color="bg-yellow-100 text-yellow-700"
-              />
-
-              <NutritionCard
-                icon={Wheat}
-                title="Karbohidrat"
-                value={nutrition.karbohidrat}
-                color="bg-orange-100 text-orange-700"
-              />
-
-              <NutritionCard
-                icon={Leaf}
-                title="Serat"
-                value={nutrition.serat}
-                color="bg-green-100 text-green-700"
-              />
+              <NutritionCard icon={Flame} title="Kalori" value={nutrition.kalori} color="bg-red-100 text-red-700" />
+              <NutritionCard icon={Dumbbell} title="Protein" value={nutrition.protein} color="bg-blue-100 text-blue-700" />
+              <NutritionCard icon={Droplets} title="Lemak" value={nutrition.lemak} color="bg-yellow-100 text-yellow-700" />
+              <NutritionCard icon={Wheat} title="Karbohidrat" value={nutrition.karbohidrat} color="bg-orange-100 text-orange-700" />
+              <NutritionCard icon={Leaf} title="Serat" value={nutrition.serat} color="bg-green-100 text-green-700" />
             </div>
           </section>
 
@@ -175,21 +177,47 @@ export default function RecipeDetailModal({ recipe, onClose }) {
           </section>
         </div>
 
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-20 bg-white border-t p-4">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-20 bg-white border-t p-4 grid grid-cols-2 gap-3">
           <button
             onClick={onClose}
-            className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold"
+            className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-semibold"
           >
             Selesai
           </button>
+
+          <button
+            onClick={handleSaveRecipe}
+            disabled={saving}
+            className="w-full bg-green-600 hover:bg-green-700 disabled:bg-slate-400 text-white py-3 rounded-xl font-semibold inline-flex items-center justify-center gap-2"
+          >
+            {saving ? (
+              <LoaderCircle size={18} className="animate-spin" />
+            ) : (
+              <Bookmark size={18} />
+            )}
+            Simpan
+          </button>
         </div>
 
-        <div className="hidden md:block px-6 pb-6">
+        <div className="hidden md:grid grid-cols-2 gap-3 px-6 pb-6">
           <button
             onClick={onClose}
-            className="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold"
+            className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-semibold"
           >
             Selesai
+          </button>
+
+          <button
+            onClick={handleSaveRecipe}
+            disabled={saving}
+            className="w-full bg-green-600 hover:bg-green-700 disabled:bg-slate-400 text-white py-3 rounded-xl font-semibold inline-flex items-center justify-center gap-2"
+          >
+            {saving ? (
+              <LoaderCircle size={18} className="animate-spin" />
+            ) : (
+              <Bookmark size={18} />
+            )}
+            Simpan Resep
           </button>
         </div>
       </motion.div>
@@ -221,9 +249,7 @@ function NutritionCard({ icon: Icon, title, value, color }) {
         <Icon size={20} />
       </div>
 
-      <p className="text-slate-500 text-xs md:text-sm mt-3">
-        {title}
-      </p>
+      <p className="text-slate-500 text-xs md:text-sm mt-3">{title}</p>
 
       <h4 className="text-base md:text-lg font-bold mt-1 break-words">
         {value || '-'}

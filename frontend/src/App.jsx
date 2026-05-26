@@ -5,6 +5,7 @@ import Inventory from './pages/user/Inventory';
 import Home from './pages/public/Home';
 import { useAuth } from './context/AuthContext';
 import Recommendations from './pages/user/Recommendations';
+import FavoriteRecipes from './pages/user/FavoriteRecipes';
 
 function ProtectedRoute({ children }) {
   const { token } = useAuth();
@@ -62,6 +63,15 @@ export default function App() {
           element={
             <ProtectedRoute>
               <Recommendations />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/favorites"
+          element={
+            <ProtectedRoute>
+              <FavoriteRecipes />
             </ProtectedRoute>
           }
         />

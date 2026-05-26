@@ -7,6 +7,7 @@ import {
   Leaf,
   ChefHat,
   X,
+  Bookmark,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -30,6 +31,11 @@ export default function Sidebar({ isOpen = false, onClose }) {
       label: 'Rekomendasi',
       path: '/recommendations',
       icon: ChefHat,
+    },
+    {
+      label: 'Favorit Resep',
+      path: '/favorites',
+      icon: Bookmark,
     },
   ];
 
