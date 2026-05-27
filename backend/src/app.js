@@ -9,6 +9,7 @@ import recommendationRoutes from './routes/recommendationRoutes.js';
 import favoriteRecipeRoutes from './routes/favoriteRecipeRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
 
+
 dotenv.config();
 
 const app = express();
