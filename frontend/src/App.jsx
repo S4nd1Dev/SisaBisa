@@ -6,6 +6,7 @@ import Home from './pages/public/Home';
 import { useAuth } from './context/AuthContext';
 import Recommendations from './pages/user/Recommendations';
 import FavoriteRecipes from './pages/user/FavoriteRecipes';
+import ForgotPassword from './pages/public/ForgotPassword';
 
 function ProtectedRoute({ children }) {
   const { token } = useAuth();
@@ -39,7 +40,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route
           path="/dashboard"
           element={

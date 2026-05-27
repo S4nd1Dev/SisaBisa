@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import pool from '../config/db.js';
 import { sendOtpEmail } from '../services/emailService.js';
+import { sendResetPasswordOtpEmail } from '../services/emailService.js';
 
 export const register = async (req, res) => {
   try {
@@ -211,6 +212,139 @@ export const verifyRegister = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        message: 'Email wajib diisi',
+      });
+    }
+
+    const userResult = await pool.query(
+      `
+      SELECT id, email
+      FROM users
+      WHERE email = $1
+      `,
+      [email]
+    );
+
+    if (userResult.rowCount === 0) {
+      return res.status(404).json({
+        message: 'Email tidak terdaftar',
+      });
+    }
+
+    const user = userResult.rows[0];
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000);
+
+    await pool.query(
+      `
+      UPDATE password_reset_otps
+      SET is_used = TRUE
+      WHERE email = $1
+      AND is_used = FALSE
+      `,
+      [email]
+    );
+
+    await pool.query(
+      `
+      INSERT INTO password_reset_otps (
+        user_id,
+        email,
+        otp,
+        expires_at
+      )
+      VALUES ($1, $2, $3, $4)
+      `,
+      [user.id, user.email, otp, expiresAt]
+    );
+
+    await sendResetPasswordOtpEmail(user.email, otp);
+
+    return res.json({
+      message: 'Kode OTP reset password berhasil dikirim ke email',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, otp, new_password } = req.body;
+
+    if (!email || !otp || !new_password) {
+      return res.status(400).json({
+        message: 'Email, OTP, dan password baru wajib diisi',
+      });
+    }
+
+    if (new_password.length < 6) {
+      return res.status(400).json({
+        message: 'Password minimal 6 karakter',
+      });
+    }
+
+    const otpResult = await pool.query(
+      `
+      SELECT *
+      FROM password_reset_otps
+      WHERE email = $1
+      AND otp = $2
+      AND is_used = FALSE
+      AND expires_at > NOW()
+      ORDER BY created_at DESC
+      LIMIT 1
+      `,
+      [email, otp]
+    );
+
+    if (otpResult.rowCount === 0) {
+      return res.status(400).json({
+        message: 'OTP tidak valid atau sudah kadaluarsa',
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(new_password, 10);
+
+    await pool.query(
+      `
+      UPDATE users
+      SET password_hash = $1
+      WHERE email = $2
+      `,
+      [hashedPassword, email]
+    );
+
+    await pool.query(
+      `
+      UPDATE password_reset_otps
+      SET is_used = TRUE
+      WHERE email = $1
+      AND otp = $2
+      `,
+      [email, otp]
+    );
+
+    return res.json({
+      message: 'Password berhasil direset. Silakan login kembali.',
+    });
+  } catch (error) {
+    return res.status(500).json({
       message: error.message,
     });
   }

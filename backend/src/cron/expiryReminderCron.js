@@ -32,10 +32,18 @@ export const startExpiryReminderCron = () => {
 
         for (const item of result.rows) {
           try {
+            const formattedExpiredAt = new Date(
+              item.expired_at
+            ).toLocaleDateString('id-ID', {
+              day: '2-digit',
+              month: 'long',
+              year: 'numeric',
+            });
+
             await sendExpiryReminderEmail(
               item.email,
               item.ingredient_name,
-              item.expired_at
+              formattedExpiredAt
             );
 
             await pool.query(
