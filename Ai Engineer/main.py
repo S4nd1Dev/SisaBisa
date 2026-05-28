@@ -6,12 +6,11 @@ import numpy as np
 import pandas as pd
 from pydantic import BaseModel
 import tensorflow as tf
-from tensorflow.keras.layers import Layer # TAMBAHAN
+from tensorflow.keras.layers import Layer
 import requests 
 
 app = FastAPI(title="SisaBisa AI Engine API")
 
-# Konfigurasi CORS agar bisa ditembak dari Frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -36,31 +35,22 @@ Layer.__init__ = patched_layer_init
 # =====================================================================
 
 # =====================================================================
-# DEFINISI CUSTOM LAYER UNTUK MODEL TWO-TOWER
-# (Supaya AI Hugging Face nggak kaget pas buka file .keras)
+# JALUR NINJA: SUBCLASS LANGSUNG DARI DENSE LAYER
+# (Mengakali bentrok Keras 2 vs Keras 3 dalam membaca hirarki variabel)
 # =====================================================================
 @tf.keras.utils.register_keras_serializable(package='Custom', name='IngredientSynergyLayer')
-class IngredientSynergyLayer(Layer):
+class IngredientSynergyLayer(tf.keras.layers.Dense):
     def __init__(self, units=64, **kwargs):
-        super(IngredientSynergyLayer, self).__init__(**kwargs)
-        self.units = units
-        # 🔥 FIX: Tambahkan name='dense' agar variabel cocok dengan model Keras
-        self.dense = tf.keras.layers.Dense(units, activation='relu', name='dense')
-
-    def build(self, input_shape):
-        # 🔥 FIX: Siapkan slot untuk menampung bobot (weights) dan bias
-        self.dense.build(input_shape)
-        super(IngredientSynergyLayer, self).build(input_shape)
-
-    def call(self, inputs):
-        return self.dense(inputs)
+        # Paksa AI untuk menganggap ini sebagai layer Dense biasa dengan aktivasi ReLU
+        kwargs['activation'] = 'relu'
+        super().__init__(units=units, **kwargs)
 
     def get_config(self):
-        config = super(IngredientSynergyLayer, self).get_config()
+        config = super().get_config()
         config.update({"units": self.units})
         return config
 
-# Proses load model Two-Tower (dengan tambahan custom_objects)
+# Load Model
 tower_kulkas = tf.keras.models.load_model(
     "tower_kulkas.keras", 
     custom_objects={"IngredientSynergyLayer": IngredientSynergyLayer},
@@ -94,7 +84,6 @@ def cari_rekomendasi(request: RekomendasiRequest):
 
         vektor_kulkas = tower_kulkas.predict(pad, verbose=0)[0]
         
-        # [FIX] Cosine Similarity: Normalisasi vektor agar persentase terkunci di 0-100%
         eps = 1e-9 
         vektor_kulkas_norm = vektor_kulkas / (np.linalg.norm(vektor_kulkas) + eps)
         resep_embeddings_norm = resep_embeddings / (np.linalg.norm(resep_embeddings, axis=1, keepdims=True) + eps)
@@ -107,11 +96,6 @@ def cari_rekomendasi(request: RekomendasiRequest):
 
         if request.bahan_mau_basi.strip():
             bahan_basi = request.bahan_mau_basi.lower().strip()
-            
-            # =====================================================================
-            # LOGIKA: EXACT MATCH BERDASARKAN PEMISAH KOMA
-            # Memotong string bahan, membuang spasi hantu, dan mencocokkan 100% pas
-            # =====================================================================
             df_temp = df_temp[df_temp["bahan"].apply(
                 lambda x: bahan_basi in [b.strip().lower() for b in str(x).split(",")]
             )]
