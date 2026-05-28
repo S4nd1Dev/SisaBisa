@@ -44,7 +44,13 @@ class IngredientSynergyLayer(Layer):
     def __init__(self, units=64, **kwargs):
         super(IngredientSynergyLayer, self).__init__(**kwargs)
         self.units = units
-        self.dense = tf.keras.layers.Dense(units, activation='relu')
+        # 🔥 FIX: Tambahkan name='dense' agar variabel cocok dengan model Keras
+        self.dense = tf.keras.layers.Dense(units, activation='relu', name='dense')
+
+    def build(self, input_shape):
+        # 🔥 FIX: Siapkan slot untuk menampung bobot (weights) dan bias
+        self.dense.build(input_shape)
+        super(IngredientSynergyLayer, self).build(input_shape)
 
     def call(self, inputs):
         return self.dense(inputs)
