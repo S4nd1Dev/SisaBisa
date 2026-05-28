@@ -82,19 +82,15 @@ export default function AdminIngredients() {
           storage_rules: defaultStorageRules,
         });
 
-        if (search.trim()) {
-          await fetchIngredients(search);
-        }
+        if (search.trim()) await fetchIngredients(search);
       }
-    } catch (error) {
-      console.error(error);
+    } catch {
       toast.error('Gagal menambahkan bahan');
     }
   };
 
   const handleEditOpen = (item) => {
     setEditingIngredient(item);
-
     setEditForm({
       name: item.name || '',
       category: item.category || '',
@@ -134,13 +130,9 @@ export default function AdminIngredients() {
       if (result.status === 'success') {
         toast.success('Bahan berhasil diperbarui');
         handleEditClose();
-
-        if (search.trim()) {
-          await fetchIngredients(search);
-        }
+        if (search.trim()) await fetchIngredients(search);
       }
-    } catch (error) {
-      console.error(error);
+    } catch {
       toast.error('Gagal memperbarui bahan');
     }
   };
@@ -155,21 +147,18 @@ export default function AdminIngredients() {
           : 'Bahan berhasil dipulihkan'
       );
 
-      if (search.trim()) {
-        await fetchIngredients(search);
-      }
-    } catch (error) {
-      console.error(error);
+      if (search.trim()) await fetchIngredients(search);
+    } catch {
       toast.error('Gagal mengubah status bahan');
     }
   };
 
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-full overflow-hidden space-y-6">
       <section className="rounded-3xl bg-gradient-to-br from-slate-900 to-slate-700 p-6 md:p-8 text-white shadow-sm">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm text-slate-100">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm">
               <Leaf size={16} />
               Master Data
             </div>
@@ -179,20 +168,20 @@ export default function AdminIngredients() {
             </h1>
 
             <p className="mt-3 max-w-2xl text-slate-200">
-              Kelola data bahan, kategori, dan aturan penyimpanan yang langsung
-              digunakan oleh fitur inventory user.
+              Kelola data bahan, kategori, dan aturan penyimpanan untuk fitur
+              inventory user.
             </p>
           </div>
 
-          <div className="rounded-2xl bg-white/10 border border-white/10 p-4 min-w-44">
-            <p className="text-sm text-slate-200">Hasil pencarian</p>
-            <p className="mt-1 text-3xl font-bold">{ingredients.length}</p>
+          <div className="rounded-2xl bg-white/10 border border-white/10 p-4 w-full lg:w-48">
+            <p className="text-sm text-slate-300">Hasil pencarian</p>
+            <p className="text-3xl font-bold mt-1">{ingredients.length}</p>
             <p className="text-sm text-slate-300">bahan ditemukan</p>
           </div>
         </div>
       </section>
 
-      <div className="grid grid-cols-1 xl:grid-cols-[420px_1fr] gap-6 items-start">
+      <div className="grid grid-cols-1 xl:grid-cols-[380px_minmax(0,1fr)] gap-6 items-start min-w-0">
         <section className="bg-white rounded-3xl shadow-sm border border-slate-200 p-5 md:p-6">
           <div className="flex items-start gap-3 mb-6">
             <div className="rounded-2xl bg-green-100 text-green-700 p-3">
@@ -210,37 +199,23 @@ export default function AdminIngredients() {
           </div>
 
           <form onSubmit={handleCreate} className="space-y-4">
-            <div>
-              <label className="text-sm font-semibold text-slate-700">
-                Nama bahan
-              </label>
-              <input
-                type="text"
-                placeholder="Contoh: Telur"
-                value={form.name}
-                onChange={(e) =>
-                  setForm({ ...form, name: e.target.value })
-                }
-                className="mt-1 w-full border border-slate-200 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-500"
-                required
-              />
-            </div>
+            <input
+              type="text"
+              placeholder="Nama bahan"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              className="w-full border border-slate-200 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-500"
+              required
+            />
 
-            <div>
-              <label className="text-sm font-semibold text-slate-700">
-                Kategori
-              </label>
-              <input
-                type="text"
-                placeholder="Contoh: Produk Susu & Telur"
-                value={form.category}
-                onChange={(e) =>
-                  setForm({ ...form, category: e.target.value })
-                }
-                className="mt-1 w-full border border-slate-200 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-500"
-                required
-              />
-            </div>
+            <input
+              type="text"
+              placeholder="Kategori"
+              value={form.category}
+              onChange={(e) => setForm({ ...form, category: e.target.value })}
+              className="w-full border border-slate-200 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-500"
+              required
+            />
 
             <div className="rounded-2xl bg-slate-50 border border-slate-100 p-4 space-y-4">
               <p className="text-sm font-bold text-slate-700">
@@ -259,17 +234,11 @@ export default function AdminIngredients() {
                     value={rule.days}
                     onChange={(e) => {
                       const updated = form.storage_rules.map((item, i) =>
-                        i === index
-                          ? { ...item, days: e.target.value }
-                          : item
+                        i === index ? { ...item, days: e.target.value } : item
                       );
-
-                      setForm({
-                        ...form,
-                        storage_rules: updated,
-                      });
+                      setForm({ ...form, storage_rules: updated });
                     }}
-                    className="mt-1 w-full border border-slate-200 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-500 bg-white"
+                    className="mt-1 w-full border border-slate-200 rounded-2xl px-4 py-3 bg-white outline-none focus:ring-2 focus:ring-green-500"
                     required
                   />
                 </div>
@@ -278,18 +247,18 @@ export default function AdminIngredients() {
 
             <button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 active:scale-[0.99] transition text-white rounded-2xl py-3 font-bold"
+              className="w-full bg-green-600 hover:bg-green-700 text-white rounded-2xl py-3 font-bold transition"
             >
               Simpan Bahan
             </button>
           </form>
         </section>
 
-        <section className="bg-white rounded-3xl shadow-sm border border-slate-200 p-5 md:p-6 h-[720px] flex flex-col">
+        <section className="bg-white rounded-3xl shadow-sm border border-slate-200 p-5 md:p-6 h-[680px] flex flex-col min-w-0">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-5">
             <div>
               <div className="flex items-center gap-2">
-                <PackageSearch className="text-slate-700" size={22} />
+                <PackageSearch size={22} />
                 <h2 className="text-xl font-bold text-slate-800">
                   Daftar Bahan
                 </h2>
@@ -318,15 +287,15 @@ export default function AdminIngredients() {
             </div>
           </div>
 
-          <div className="overflow-auto flex-1 rounded-2xl border border-slate-100">
-            <table className="w-full min-w-[900px] text-sm">
-              <thead className="sticky top-0 bg-slate-50 z-10">
+          <div className="flex-1 overflow-auto rounded-2xl border border-slate-100">
+            <table className="w-full min-w-[720px] text-sm">
+              <thead className="sticky top-0 z-10 bg-slate-50">
                 <tr className="text-left text-slate-500 border-b border-slate-200">
-                  <th className="px-5 py-4 font-bold">Nama Bahan</th>
-                  <th className="px-5 py-4 font-bold">Kategori</th>
-                  <th className="px-5 py-4 font-bold">Storage Rules</th>
-                  <th className="px-5 py-4 font-bold">Status</th>
-                  <th className="px-5 py-4 font-bold text-right">Aksi</th>
+                  <th className="px-4 py-4 font-bold">Nama</th>
+                  <th className="px-4 py-4 font-bold">Kategori</th>
+                  <th className="px-4 py-4 font-bold">Storage</th>
+                  <th className="px-4 py-4 font-bold">Status</th>
+                  <th className="px-4 py-4 font-bold text-right">Aksi</th>
                 </tr>
               </thead>
 
@@ -341,21 +310,16 @@ export default function AdminIngredients() {
                         Mulai cari bahan
                       </p>
                       <p className="text-sm text-slate-500 mt-1">
-                        Data tidak ditampilkan sebelum admin melakukan pencarian.
+                        Data tidak ditampilkan sebelum admin melakukan
+                        pencarian.
                       </p>
                     </td>
                   </tr>
                 ) : ingredients.length === 0 ? (
                   <tr>
                     <td colSpan="5" className="py-20 text-center">
-                      <div className="mx-auto w-16 h-16 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center">
-                        <PackageSearch size={28} />
-                      </div>
-                      <p className="mt-4 font-bold text-slate-700">
+                      <p className="font-bold text-slate-700">
                         Bahan tidak ditemukan
-                      </p>
-                      <p className="text-sm text-slate-500 mt-1">
-                        Coba gunakan kata kunci lain.
                       </p>
                     </td>
                   </tr>
@@ -364,35 +328,25 @@ export default function AdminIngredients() {
                     <tr
                       key={item.id}
                       className={`transition ${
-                        item.is_active
-                          ? 'hover:bg-slate-50'
-                          : 'bg-slate-50/80'
+                        item.is_active ? 'hover:bg-slate-50' : 'bg-slate-50'
                       }`}
                     >
-                      <td className="px-5 py-5">
-                        <p className="font-bold text-slate-800 capitalize">
-                          {item.name}
-                        </p>
-
-                        {!item.is_active && (
-                          <p className="text-xs text-slate-400 mt-1">
-                            Tidak tampil di halaman user
-                          </p>
-                        )}
+                      <td className="px-4 py-4 font-bold capitalize text-slate-800">
+                        {item.name}
                       </td>
 
-                      <td className="px-5 py-5">
-                        <span className="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+                      <td className="px-4 py-4">
+                        <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
                           {item.category}
                         </span>
                       </td>
 
-                      <td className="px-5 py-5">
-                        <div className="flex flex-wrap gap-2 max-w-md">
+                      <td className="px-4 py-4">
+                        <div className="flex flex-wrap gap-2">
                           {item.storage_rules?.map((rule) => (
                             <span
                               key={`${item.id}-${rule.storage}`}
-                              className="inline-flex items-center rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-700"
+                              className="rounded-full bg-green-50 px-3 py-1 text-xs font-semibold text-green-700"
                             >
                               {rule.storage}: {rule.days} hari
                             </span>
@@ -400,9 +354,9 @@ export default function AdminIngredients() {
                         </div>
                       </td>
 
-                      <td className="px-5 py-5">
+                      <td className="px-4 py-4">
                         <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-bold ${
+                          className={`rounded-full px-3 py-1 text-xs font-bold ${
                             item.is_active
                               ? 'bg-green-100 text-green-700'
                               : 'bg-slate-200 text-slate-600'
@@ -412,12 +366,12 @@ export default function AdminIngredients() {
                         </span>
                       </td>
 
-                      <td className="px-5 py-5">
+                      <td className="px-4 py-4">
                         <div className="flex justify-end gap-2">
                           <button
                             type="button"
                             onClick={() => handleEditOpen(item)}
-                            className="inline-flex items-center gap-1 rounded-xl px-3 py-2 text-xs font-bold bg-blue-50 text-blue-600 hover:bg-blue-100 transition"
+                            className="inline-flex items-center gap-1 rounded-xl px-3 py-2 text-xs font-bold bg-blue-50 text-blue-600 hover:bg-blue-100"
                           >
                             <Pencil size={14} />
                             Edit
@@ -428,7 +382,7 @@ export default function AdminIngredients() {
                             onClick={() =>
                               handleStatusChange(item.id, item.is_active)
                             }
-                            className={`inline-flex items-center gap-1 rounded-xl px-3 py-2 text-xs font-bold transition ${
+                            className={`inline-flex items-center gap-1 rounded-xl px-3 py-2 text-xs font-bold ${
                               item.is_active
                                 ? 'bg-amber-50 text-amber-700 hover:bg-amber-100'
                                 : 'bg-green-50 text-green-700 hover:bg-green-100'
@@ -460,104 +414,74 @@ export default function AdminIngredients() {
       {editingIngredient && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div className="w-full max-w-xl bg-white rounded-3xl shadow-xl p-5 md:p-6 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-start justify-between gap-4 mb-5">
+            <div className="flex justify-between gap-4 mb-5">
               <div>
                 <h2 className="text-xl font-bold text-slate-800">
                   Edit Bahan
                 </h2>
                 <p className="text-sm text-slate-500 mt-1">
-                  Perubahan akan langsung digunakan oleh fitur user.
+                  Perubahan akan langsung digunakan fitur user.
                 </p>
               </div>
 
               <button
                 type="button"
                 onClick={handleEditClose}
-                className="rounded-xl bg-slate-100 p-2 text-slate-600 hover:bg-slate-200"
+                className="rounded-xl bg-slate-100 p-2 text-slate-600"
               >
                 <X size={18} />
               </button>
             </div>
 
             <form onSubmit={handleUpdate} className="space-y-4">
-              <div>
-                <label className="text-sm font-semibold text-slate-700">
-                  Nama bahan
-                </label>
+              <input
+                type="text"
+                value={editForm.name}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, name: e.target.value })
+                }
+                className="w-full border border-slate-200 rounded-2xl px-4 py-3"
+                required
+              />
+
+              <input
+                type="text"
+                value={editForm.category}
+                onChange={(e) =>
+                  setEditForm({ ...editForm, category: e.target.value })
+                }
+                className="w-full border border-slate-200 rounded-2xl px-4 py-3"
+                required
+              />
+
+              {editForm.storage_rules.map((rule, index) => (
                 <input
-                  type="text"
-                  placeholder="Nama bahan"
-                  value={editForm.name}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, name: e.target.value })
-                  }
-                  className="mt-1 w-full border border-slate-200 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-500"
+                  key={rule.storage}
+                  type="number"
+                  value={rule.days}
+                  onChange={(e) => {
+                    const updated = editForm.storage_rules.map((item, i) =>
+                      i === index ? { ...item, days: e.target.value } : item
+                    );
+                    setEditForm({ ...editForm, storage_rules: updated });
+                  }}
+                  className="w-full border border-slate-200 rounded-2xl px-4 py-3"
                   required
                 />
-              </div>
+              ))}
 
-              <div>
-                <label className="text-sm font-semibold text-slate-700">
-                  Kategori
-                </label>
-                <input
-                  type="text"
-                  placeholder="Kategori"
-                  value={editForm.category}
-                  onChange={(e) =>
-                    setEditForm({ ...editForm, category: e.target.value })
-                  }
-                  className="mt-1 w-full border border-slate-200 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-500"
-                  required
-                />
-              </div>
-
-              <div className="rounded-2xl bg-slate-50 border border-slate-100 p-4 space-y-4">
-                <p className="text-sm font-bold text-slate-700">
-                  Aturan penyimpanan
-                </p>
-
-                {editForm.storage_rules.map((rule, index) => (
-                  <div key={rule.storage}>
-                    <label className="text-sm font-medium text-slate-600">
-                      {rule.storage}
-                    </label>
-
-                    <input
-                      type="number"
-                      placeholder="Jumlah hari"
-                      value={rule.days}
-                      onChange={(e) => {
-                        const updated = editForm.storage_rules.map((item, i) =>
-                          i === index
-                            ? { ...item, days: e.target.value }
-                            : item
-                        );
-
-                        setEditForm({
-                          ...editForm,
-                          storage_rules: updated,
-                        });
-                      }}
-                      className="mt-1 w-full border border-slate-200 rounded-2xl px-4 py-3 outline-none focus:ring-2 focus:ring-green-500 bg-white"
-                      required
-                    />
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex flex-col sm:flex-row justify-end gap-3 pt-2">
+              <div className="flex justify-end gap-3">
                 <button
                   type="button"
                   onClick={handleEditClose}
-                  className="px-4 py-3 rounded-2xl bg-slate-100 text-slate-700 font-bold hover:bg-slate-200"
+                  className="px-4 py-3 rounded-2xl bg-slate-100 font-bold"
                 >
                   Batal
                 </button>
 
                 <button
                   type="submit"
-                  className="px-4 py-3 rounded-2xl bg-green-600 text-white font-bold hover:bg-green-700"
+                  className="px-4 py-3 rounded-2xl bg-green-600 text-white font-bold"
                 >
                   Simpan Perubahan
                 </button>

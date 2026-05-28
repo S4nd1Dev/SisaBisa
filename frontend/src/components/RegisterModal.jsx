@@ -1,4 +1,15 @@
-import { X, Eye, EyeOff } from 'lucide-react';
+import {
+  X,
+  Eye,
+  EyeOff,
+  Leaf,
+  User,
+  Mail,
+  LockKeyhole,
+  ShieldCheck,
+  Loader2,
+  ArrowLeft,
+} from 'lucide-react';
 import { useState } from 'react';
 import api from '../api/axios';
 
@@ -7,6 +18,7 @@ export default function RegisterModal({ onClose }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [message, setMessage] = useState('');
+  const [messageType, setMessageType] = useState('info');
   const [loading, setLoading] = useState(false);
 
   const [form, setForm] = useState({
@@ -19,6 +31,12 @@ export default function RegisterModal({ onClose }) {
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    if (message) setMessage('');
+  };
+
+  const showMessage = (text, type = 'error') => {
+    setMessage(text);
+    setMessageType(type);
   };
 
   const validateEmail = (email) => {
@@ -36,19 +54,19 @@ export default function RegisterModal({ onClose }) {
 
   const handleContinue = (e) => {
     e.preventDefault();
-    setMessage('');
 
     const emailError = validateEmail(form.email);
-    if (emailError) return setMessage(emailError);
+    if (emailError) return showMessage(emailError);
 
     const passwordError = validatePassword(form.password);
-    if (passwordError) return setMessage(passwordError);
+    if (passwordError) return showMessage(passwordError);
 
     if (form.password !== form.confirmPassword) {
-      return setMessage('Password dan konfirmasi password tidak sama.');
+      return showMessage('Password dan konfirmasi password tidak sama.');
     }
 
     setStep(2);
+    setMessage('');
   };
 
   const handleSendOtp = async (e) => {
@@ -59,9 +77,9 @@ export default function RegisterModal({ onClose }) {
     try {
       await api.post('/auth/send-otp', { email: form.email });
       setStep(3);
-      setMessage('OTP berhasil dikirim ke email kamu.');
+      showMessage('OTP berhasil dikirim ke email kamu.', 'success');
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Gagal mengirim OTP');
+      showMessage(error.response?.data?.message || 'Gagal mengirim OTP');
     } finally {
       setLoading(false);
     }
@@ -80,147 +98,247 @@ export default function RegisterModal({ onClose }) {
         otp: form.otp,
       });
 
-      setMessage('Registrasi berhasil. Silakan login.');
+      showMessage('Registrasi berhasil. Silakan login.', 'success');
       setTimeout(onClose, 1200);
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Registrasi gagal');
+      showMessage(error.response?.data?.message || 'Registrasi gagal');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4">
-      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-xl p-6">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 px-4 py-6 backdrop-blur-sm overflow-y-auto">
+      <div className="relative my-auto w-full max-w-lg overflow-hidden rounded-[2rem] bg-white shadow-2xl">
         <button
+          type="button"
           onClick={onClose}
-          className="absolute -top-3 -right-3 bg-slate-700 text-white rounded-full p-1"
+          className="absolute right-4 top-4 z-10 rounded-full bg-white/90 p-2 text-slate-500 shadow-sm hover:bg-slate-100 hover:text-slate-800 transition"
         >
           <X size={18} />
         </button>
 
-        <h1 className="text-3xl font-bold text-slate-800">REGISTER</h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Buat akun untuk menyimpan dan memonitor bahan makanan.
-        </p>
-
-        {step === 1 && (
-          <form onSubmit={handleContinue} className="mt-6 space-y-4">
-            <input
-              name="name"
-              placeholder="Nama Lengkap"
-              value={form.name}
-              onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-3"
-              required
-            />
-
-            <input
-              name="email"
-              type="email"
-              placeholder="Email Aktif"
-              value={form.email}
-              onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-3"
-              required
-            />
-
-            <div className="relative">
-              <input
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Password"
-                value={form.password}
-                onChange={handleChange}
-                className="w-full border rounded-lg px-4 py-3 pr-12"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500"
-              >
-                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
+        <div className="bg-gradient-to-br from-green-600 via-emerald-500 to-teal-500 px-5 sm:px-6 py-6 sm:py-7 text-white">
+          <div className="flex items-center gap-3">
+            <div className="flex h-11 w-11 sm:h-12 sm:w-12 items-center justify-center rounded-2xl bg-white/20 border border-white/20">
+              <Leaf size={23} />
             </div>
 
-            <div className="relative">
-              <input
-                name="confirmPassword"
-                type={showConfirmPassword ? 'text' : 'password'}
-                placeholder="Konfirmasi Password"
-                value={form.confirmPassword}
-                onChange={handleChange}
-                className="w-full border rounded-lg px-4 py-3 pr-12"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500"
-              >
-                {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-              </button>
-            </div>
-
-            <button className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold">
-              Lanjutkan
-            </button>
-          </form>
-        )}
-
-        {step === 2 && (
-          <form onSubmit={handleSendOtp} className="mt-6 space-y-4">
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4">
-              <p className="text-sm text-slate-600">
-                Kode OTP akan dikirim ke:
+            <div>
+              <h1 className="text-xl sm:text-2xl font-extrabold">
+                Buat Akun SisaBisa
+              </h1>
+              <p className="text-sm text-green-50">
+                Mulai kelola inventory makananmu.
               </p>
-              <p className="font-semibold mt-1">{form.email}</p>
             </div>
+          </div>
 
-            <button
-              disabled={loading}
-              className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold"
-            >
-              {loading ? 'Mengirim OTP...' : 'Kirim OTP'}
-            </button>
+          <div className="mt-5 grid grid-cols-3 gap-2">
+            <StepBadge active={step >= 1} label="Akun" />
+            <StepBadge active={step >= 2} label="OTP" />
+            <StepBadge active={step >= 3} label="Verifikasi" />
+          </div>
+        </div>
 
-            <button
-              type="button"
-              onClick={() => setStep(1)}
-              className="w-full border py-3 rounded-lg"
-            >
-              Ubah Data
-            </button>
-          </form>
-        )}
+        <div className="px-5 sm:px-6 py-5 sm:py-6 max-h-[70vh] overflow-y-auto">
+          {step === 1 && (
+            <form onSubmit={handleContinue} className="space-y-4">
+              <FieldWrapper label="Nama Lengkap" icon={User}>
+                <input
+                  name="name"
+                  placeholder="Nama lengkap"
+                  value={form.name}
+                  onChange={handleChange}
+                  className="w-full rounded-2xl border border-slate-200 py-3 pl-11 pr-4 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20"
+                  required
+                />
+              </FieldWrapper>
 
-        {step === 3 && (
-          <form onSubmit={handleVerifyRegister} className="mt-6 space-y-4">
-            <input
-              name="otp"
-              placeholder="Kode OTP"
-              value={form.otp}
-              onChange={handleChange}
-              className="w-full border rounded-lg px-4 py-3"
-              required
-            />
+              <FieldWrapper label="Email Aktif" icon={Mail}>
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="nama@email.com"
+                  value={form.email}
+                  onChange={handleChange}
+                  className="w-full rounded-2xl border border-slate-200 py-3 pl-11 pr-4 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20"
+                  required
+                />
+              </FieldWrapper>
 
-            <button
-              disabled={loading}
-              className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold"
-            >
-              {loading ? 'Memverifikasi...' : 'Verifikasi & Daftar'}
-            </button>
-          </form>
-        )}
+              <PasswordField
+                label="Password"
+                name="password"
+                value={form.password}
+                placeholder="Minimal 8 karakter"
+                show={showPassword}
+                onToggle={() => setShowPassword(!showPassword)}
+                onChange={handleChange}
+              />
 
-        {message && (
-          <p className="mt-4 text-sm text-center text-slate-700">
-            {message}
-          </p>
-        )}
+              <PasswordField
+                label="Konfirmasi Password"
+                name="confirmPassword"
+                value={form.confirmPassword}
+                placeholder="Ulangi password"
+                show={showConfirmPassword}
+                onToggle={() => setShowConfirmPassword(!showConfirmPassword)}
+                onChange={handleChange}
+              />
+
+              <MessageBox message={message} type={messageType} />
+
+              <button className="w-full rounded-2xl bg-green-600 py-3 font-bold text-white hover:bg-green-700">
+                Lanjutkan
+              </button>
+            </form>
+          )}
+
+          {step === 2 && (
+            <form onSubmit={handleSendOtp} className="space-y-4">
+              <div className="rounded-3xl bg-green-50 border border-green-100 p-5">
+                <p className="text-sm text-slate-600">
+                  Kode OTP akan dikirim ke:
+                </p>
+                <p className="font-bold text-green-700 mt-1 break-all">
+                  {form.email}
+                </p>
+              </div>
+
+              <MessageBox message={message} type={messageType} />
+
+              <button
+                disabled={loading}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-green-600 py-3 font-bold text-white hover:bg-green-700 disabled:bg-slate-400"
+              >
+                {loading && <Loader2 size={18} className="animate-spin" />}
+                {loading ? 'Mengirim OTP...' : 'Kirim OTP'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 py-3 font-bold text-slate-700 hover:bg-slate-50"
+              >
+                <ArrowLeft size={18} />
+                Ubah Data
+              </button>
+            </form>
+          )}
+
+          {step === 3 && (
+            <form onSubmit={handleVerifyRegister} className="space-y-4">
+              <FieldWrapper label="Kode OTP" icon={ShieldCheck}>
+                <input
+                  name="otp"
+                  placeholder="Masukkan kode OTP"
+                  value={form.otp}
+                  onChange={handleChange}
+                  className="w-full rounded-2xl border border-slate-200 py-3 pl-11 pr-4 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20"
+                  required
+                />
+              </FieldWrapper>
+
+              <MessageBox message={message} type={messageType} />
+
+              <button
+                disabled={loading}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-green-600 py-3 font-bold text-white hover:bg-green-700 disabled:bg-slate-400"
+              >
+                {loading && <Loader2 size={18} className="animate-spin" />}
+                {loading ? 'Memverifikasi...' : 'Verifikasi & Daftar'}
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setStep(2)}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-slate-200 py-3 font-bold text-slate-700 hover:bg-slate-50"
+              >
+                <ArrowLeft size={18} />
+                Kembali
+              </button>
+            </form>
+          )}
+        </div>
       </div>
+    </div>
+  );
+}
+
+function StepBadge({ active, label }) {
+  return (
+    <div
+      className={`rounded-2xl px-2 sm:px-3 py-2 text-center text-xs font-bold ${
+        active
+          ? 'bg-white text-green-700'
+          : 'bg-white/10 text-green-50 border border-white/10'
+      }`}
+    >
+      {label}
+    </div>
+  );
+}
+
+function FieldWrapper({ label, icon: Icon, children }) {
+  return (
+    <div>
+      <label className="mb-1.5 block text-sm font-semibold text-slate-700">
+        {label}
+      </label>
+
+      <div className="relative">
+        <Icon size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function PasswordField({ label, name, value, placeholder, show, onToggle, onChange }) {
+  return (
+    <div>
+      <label className="mb-1.5 block text-sm font-semibold text-slate-700">
+        {label}
+      </label>
+
+      <div className="relative">
+        <LockKeyhole size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+
+        <input
+          name={name}
+          type={show ? 'text' : 'password'}
+          placeholder={placeholder}
+          value={value}
+          onChange={onChange}
+          className="w-full rounded-2xl border border-slate-200 py-3 pl-11 pr-12 outline-none focus:border-green-500 focus:ring-2 focus:ring-green-500/20"
+          required
+        />
+
+        <button
+          type="button"
+          onClick={onToggle}
+          className="absolute right-3 top-1/2 -translate-y-1/2 rounded-xl p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+        >
+          {show ? <EyeOff size={18} /> : <Eye size={18} />}
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function MessageBox({ message, type }) {
+  if (!message) return null;
+
+  return (
+    <div
+      className={`rounded-2xl border px-4 py-3 text-sm font-medium ${
+        type === 'success'
+          ? 'border-green-100 bg-green-50 text-green-700'
+          : 'border-red-100 bg-red-50 text-red-700'
+      }`}
+    >
+      {message}
     </div>
   );
 }
