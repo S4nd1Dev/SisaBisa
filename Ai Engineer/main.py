@@ -39,7 +39,7 @@ Layer.__init__ = patched_layer_init
 # DEFINISI CUSTOM LAYER UNTUK MODEL TWO-TOWER
 # (Supaya AI Hugging Face nggak kaget pas buka file .keras)
 # =====================================================================
-@tf.keras.saving.register_keras_serializable()
+@tf.keras.utils.register_keras_serializable(package='Custom', name='IngredientSynergyLayer')
 class IngredientSynergyLayer(Layer):
     def __init__(self, units=64, **kwargs):
         super(IngredientSynergyLayer, self).__init__(**kwargs)
