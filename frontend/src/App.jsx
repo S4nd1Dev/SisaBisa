@@ -7,10 +7,11 @@ import { useAuth } from './context/AuthContext';
 import Recommendations from './pages/user/Recommendations';
 import FavoriteRecipes from './pages/user/FavoriteRecipes';
 import ForgotPassword from './pages/public/ForgotPassword';
+import AdminIngredients from './pages/user/AdminIngredients';
+import AdminLayout from './layouts/AdminLayout';
 
 function ProtectedRoute({ children }) {
   const { token } = useAuth();
-
   return token ? children : <Navigate to="/" replace />;
 }
 
@@ -27,10 +28,7 @@ function RedirectUnknownRoute() {
   const { user, token } = useAuth();
 
   if (!token) return <Navigate to="/" replace />;
-
-  if (user?.role === 'admin') {
-    return <Navigate to="/admin" replace />;
-  }
+  if (user?.role === 'admin') return <Navigate to="/admin" replace />;
 
   return <Navigate to="/dashboard" replace />;
 }
@@ -41,6 +39,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+
         <Route
           path="/dashboard"
           element={
@@ -81,10 +80,13 @@ export default function App() {
           path="/admin"
           element={
             <AdminRoute>
-              <AdminDashboard />
+              <AdminLayout />
             </AdminRoute>
           }
-        />
+        >
+          <Route index element={<AdminDashboard />} />
+          <Route path="ingredients" element={<AdminIngredients />} />
+        </Route>
 
         <Route path="*" element={<RedirectUnknownRoute />} />
       </Routes>

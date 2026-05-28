@@ -5,6 +5,7 @@ import {
   LogOut,
   ShieldCheck,
   X,
+  PackageSearch,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -18,6 +19,11 @@ export default function AdminSidebar({ isOpen = false, onClose }) {
       label: 'Dashboard Admin',
       path: '/admin',
       icon: LayoutDashboard,
+    },
+    {
+      label: 'Ingredient Management',
+      path: '/admin/ingredients',
+      icon: PackageSearch,
     },
   ];
 

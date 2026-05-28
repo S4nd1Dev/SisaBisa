@@ -42,7 +42,10 @@ export default function Inventory() {
     const loadInventory = async () => {
       try {
         const data = await fetchInventory();
-        if (!ignore) setItems(data);
+
+        if (!ignore) {
+          setItems(data);
+        }
       } catch {
         toast.error('Gagal memuat inventory');
       }
@@ -96,7 +99,7 @@ export default function Inventory() {
     const status = getExpiryStatus(item.expired_at);
 
     const matchesSearch = item.ingredient_name
-      .toLowerCase()
+      ?.toLowerCase()
       .includes(inventorySearch.toLowerCase());
 
     const matchesFilter = filter === 'all' || status.key === filter;
@@ -107,6 +110,10 @@ export default function Inventory() {
   const handleSearch = async (value) => {
     setSearch(value);
     setSelectedIngredient(null);
+    setForm({
+      ...form,
+      storage: '',
+    });
 
     if (value.length < 2) {
       setSuggestions([]);
@@ -114,7 +121,10 @@ export default function Inventory() {
     }
 
     try {
-      const response = await api.get(`/public/ingredients?search=${value}`);
+      const response = await api.get('/public/ingredients', {
+        params: { search: value },
+      });
+
       setSuggestions(response.data.data || []);
     } catch {
       toast.error('Gagal mencari bahan');
@@ -125,6 +135,10 @@ export default function Inventory() {
     setSelectedIngredient(ingredient);
     setSearch(ingredient.item);
     setSuggestions([]);
+    setForm({
+      ...form,
+      storage: '',
+    });
   };
 
   const handleChange = (e) => {
@@ -142,24 +156,23 @@ export default function Inventory() {
       return;
     }
 
+    if (!form.storage) {
+      toast.error('Pilih kondisi penyimpanan');
+      return;
+    }
+
     try {
-      const expiryResponse = await api.post('/public/check-expiry', {
+      await api.post('/inventory', {
         ingredient_id: selectedIngredient.ingredient_id,
         storage: form.storage,
-        purchase_date: form.purchase_date,
-      });
-
-      const expiryData = expiryResponse.data.data;
-
-      await api.post('/inventory', {
-        ingredient_name: expiryData.item,
         quantity: form.quantity,
         unit: form.unit,
-        expired_at: expiryData.estimated_expired_at,
+        purchase_date: form.purchase_date,
       });
 
       setSearch('');
       setSelectedIngredient(null);
+      setSuggestions([]);
       setForm({
         quantity: '',
         unit: '',
@@ -198,6 +211,8 @@ export default function Inventory() {
     { label: 'Expired', value: 'expired' },
   ];
 
+  const selectedStorageRules = selectedIngredient?.storage_rules || [];
+
   return (
     <UserLayout>
       <div className="space-y-5 md:space-y-6">
@@ -228,9 +243,11 @@ export default function Inventory() {
               className="bg-white/20 border border-white/30 rounded-2xl p-4 md:p-5 md:min-w-40"
             >
               <p className="text-green-50 text-sm">Total Inventory</p>
+
               <h2 className="text-3xl md:text-4xl font-bold mt-1">
                 {items.length}
               </h2>
+
               <p className="text-green-50 text-sm mt-1">
                 bahan tersimpan
               </p>
@@ -251,8 +268,10 @@ export default function Inventory() {
 
             <div>
               <h2 className="font-bold text-lg md:text-xl">Tambah Bahan</h2>
+
               <p className="text-sm text-slate-500">
-                Cari bahan dari dataset lalu masukkan jumlah dan tanggal beli.
+                Cari bahan dari data master, pilih storage, lalu sistem akan
+                menghitung expired otomatis.
               </p>
             </div>
           </div>
@@ -289,6 +308,7 @@ export default function Inventory() {
                       className="w-full text-left px-4 py-3 hover:bg-green-50 transition"
                     >
                       <div className="font-semibold">{item.item}</div>
+
                       <div className="text-sm text-slate-500">
                         {item.category}
                       </div>
@@ -297,6 +317,16 @@ export default function Inventory() {
                 </motion.div>
               )}
             </div>
+
+            {selectedIngredient && (
+              <div className="md:col-span-2 bg-green-50 border border-green-100 text-green-700 rounded-xl px-4 py-3 text-sm">
+                Bahan dipilih:{' '}
+                <span className="font-semibold">
+                  {selectedIngredient.item}
+                </span>{' '}
+                — {selectedIngredient.category}
+              </div>
+            )}
 
             <input
               name="quantity"
@@ -322,11 +352,19 @@ export default function Inventory() {
               onChange={handleChange}
               className="border border-slate-200 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500"
               required
+              disabled={!selectedIngredient}
             >
-              <option value="">Pilih kondisi penyimpanan</option>
-              <option value="suhu ruangan">Suhu Ruangan</option>
-              <option value="kulkas">Kulkas</option>
-              <option value="freezer">Freezer</option>
+              <option value="">
+                {selectedIngredient
+                  ? 'Pilih kondisi penyimpanan'
+                  : 'Pilih bahan terlebih dahulu'}
+              </option>
+
+              {selectedStorageRules.map((rule) => (
+                <option key={rule.storage} value={rule.storage}>
+                  {rule.storage} — {rule.days} hari
+                </option>
+              ))}
             </select>
 
             <input
@@ -360,6 +398,7 @@ export default function Inventory() {
                 <h2 className="font-bold text-lg md:text-xl">
                   Daftar Inventory
                 </h2>
+
                 <p className="text-sm text-slate-500">
                   Menampilkan {filteredItems.length} dari {items.length} bahan.
                 </p>
@@ -419,7 +458,7 @@ export default function Inventory() {
                     </div>
 
                     <div className="min-w-0">
-                      <h3 className="font-bold text-base md:text-lg break-words">
+                      <h3 className="font-bold text-base md:text-lg break-words capitalize">
                         {item.ingredient_name}
                       </h3>
 
@@ -427,8 +466,15 @@ export default function Inventory() {
                         {item.quantity} {item.unit}
                       </p>
 
+                      {item.storage && (
+                        <p className="text-sm text-slate-500 mt-1">
+                          Penyimpanan: {item.storage}
+                        </p>
+                      )}
+
                       <div className="flex items-start gap-2 text-sm text-slate-500 mt-2">
                         <CalendarDays size={16} className="shrink-0 mt-0.5" />
+
                         <span>
                           Expired:{' '}
                           {new Date(item.expired_at).toLocaleDateString(

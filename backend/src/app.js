@@ -8,6 +8,7 @@ import { startExpiryReminderCron } from './cron/expiryReminderCron.js';
 import recommendationRoutes from './routes/recommendationRoutes.js';
 import favoriteRecipeRoutes from './routes/favoriteRecipeRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import ingredientRoutes from './routes/ingredientRoutes.js';
 
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.use('/public', publicRoutes);
 app.use('/recommendations', recommendationRoutes);
 app.use('/favorites', favoriteRecipeRoutes);
 app.use('/admin', adminRoutes);
+app.use('/ingredients', ingredientRoutes);
 app.get('/', (req, res) => {
   res.json({
     message: 'API Running'

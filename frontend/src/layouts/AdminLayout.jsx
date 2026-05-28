@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import { Menu, ShieldCheck } from 'lucide-react';
 import AdminSidebar from '../components/AdminSidebar';
 
-export default function AdminLayout({ children }) {
+export default function AdminLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
@@ -26,9 +27,7 @@ export default function AdminLayout({ children }) {
               <ShieldCheck size={18} />
             </div>
 
-            <span className="font-bold text-slate-800">
-              Admin Panel
-            </span>
+            <span className="font-bold text-slate-800">Admin Panel</span>
           </div>
 
           <div className="w-10" />
@@ -37,7 +36,7 @@ export default function AdminLayout({ children }) {
 
       <div className="md:ml-64">
         <main className="p-4 pt-20 md:p-6">
-          {children}
+          <Outlet />
         </main>
       </div>
     </div>

@@ -12,10 +12,18 @@ export const checkExpiry = async (req, res) => {
 
     const result = await pool.query(
       `
-      SELECT *
-      FROM ingredient_expiry
-      WHERE ingredient_id = $1
-      AND LOWER(storage) = LOWER($2)
+      SELECT
+        i.id AS ingredient_id,
+        i.name AS item,
+        i.category,
+        r.storage,
+        r.days
+      FROM ingredients i
+      JOIN ingredient_storage_rules r
+        ON r.ingredient_id = i.id
+      WHERE i.id = $1
+        AND i.is_active = true
+        AND LOWER(r.storage) = LOWER($2)
       LIMIT 1
       `,
       [ingredient_id, storage.trim()]
@@ -32,7 +40,7 @@ export const checkExpiry = async (req, res) => {
     const purchaseDate = new Date(purchase_date);
     const expiredDate = new Date(purchaseDate);
 
-    expiredDate.setDate(expiredDate.getDate() + ingredient.days);
+    expiredDate.setDate(expiredDate.getDate() + Number(ingredient.days));
 
     res.json({
       message: 'Estimasi expired berhasil dihitung',
@@ -65,13 +73,27 @@ export const searchIngredients = async (req, res) => {
 
     const result = await pool.query(
       `
-      SELECT DISTINCT ON (ingredient_id)
-        ingredient_id,
-        item,
-        category
-      FROM ingredient_expiry
-      WHERE item ILIKE $1
-      ORDER BY ingredient_id, item ASC
+      SELECT
+        i.id AS ingredient_id,
+        i.name AS item,
+        i.category,
+        COALESCE(
+          json_agg(
+            json_build_object(
+              'storage', r.storage,
+              'days', r.days
+            )
+            ORDER BY r.storage ASC
+          ) FILTER (WHERE r.id IS NOT NULL),
+          '[]'
+        ) AS storage_rules
+      FROM ingredients i
+      LEFT JOIN ingredient_storage_rules r
+        ON r.ingredient_id = i.id
+      WHERE i.is_active = true
+        AND i.name ILIKE $1
+      GROUP BY i.id
+      ORDER BY i.name ASC
       LIMIT 10
       `,
       [`%${search.trim()}%`]
