@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from pydantic import BaseModel
 import tensorflow as tf
+from tensorflow.keras.layers import Layer # TAMBAHAN
 import requests 
 
 app = FastAPI(title="SisaBisa AI Engine API")
@@ -34,8 +35,31 @@ def patched_layer_init(self, *args, **kwargs):
 Layer.__init__ = patched_layer_init
 # =====================================================================
 
-# Proses load model Two-Tower
-tower_kulkas = tf.keras.models.load_model("tower_kulkas.keras", compile=False)
+# =====================================================================
+# DEFINISI CUSTOM LAYER UNTUK MODEL TWO-TOWER
+# (Supaya AI Hugging Face nggak kaget pas buka file .keras)
+# =====================================================================
+@tf.keras.saving.register_keras_serializable()
+class IngredientSynergyLayer(Layer):
+    def __init__(self, units=64, **kwargs):
+        super(IngredientSynergyLayer, self).__init__(**kwargs)
+        self.units = units
+        self.dense = tf.keras.layers.Dense(units, activation='relu')
+
+    def call(self, inputs):
+        return self.dense(inputs)
+
+    def get_config(self):
+        config = super(IngredientSynergyLayer, self).get_config()
+        config.update({"units": self.units})
+        return config
+
+# Proses load model Two-Tower (dengan tambahan custom_objects)
+tower_kulkas = tf.keras.models.load_model(
+    "tower_kulkas.keras", 
+    custom_objects={"IngredientSynergyLayer": IngredientSynergyLayer},
+    compile=False
+)
 resep_embeddings = np.load("resep_embeddings.npy")
 
 with open("tokenizer.json", "r", encoding="utf-8") as f:
