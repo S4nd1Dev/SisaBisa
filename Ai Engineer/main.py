@@ -79,7 +79,7 @@ def cari_rekomendasi(request: RekomendasiRequest):
             bahan_basi = request.bahan_mau_basi.lower().strip()
             
             # =====================================================================
-            # 🎯 LOGIKA PILIHAN RIYAN: EXACT MATCH BERDASARKAN PEMISAH KOMA
+            # LOGIKA: EXACT MATCH BERDASARKAN PEMISAH KOMA
             # Memotong string bahan, membuang spasi hantu, dan mencocokkan 100% pas
             # =====================================================================
             df_temp = df_temp[df_temp["bahan"].apply(
