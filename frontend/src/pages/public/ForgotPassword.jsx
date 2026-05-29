@@ -71,18 +71,18 @@ export default function ForgotPassword() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-100 flex items-center justify-center px-4">
-      <div className="bg-white w-full max-w-md rounded-3xl shadow-sm border border-slate-100 p-6 md:p-8">
+    <div className="min-h-screen bg-yellow-50/20 flex items-center justify-center px-4">
+      <div className="bg-white w-full max-w-md rounded-3xl shadow-sm border border-green-100/30 p-6 md:p-8">
         <div className="text-center">
-          <div className="bg-green-100 text-green-700 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto">
+          <div className="bg-green-100 text-green-700 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto shadow-sm shadow-green-700/5">
             <KeyRound size={30} />
           </div>
 
-          <h1 className="text-2xl font-bold mt-4">
+          <h1 className="text-2xl font-bold mt-4 text-green-900 tracking-tight">
             Lupa Password
           </h1>
 
-          <p className="text-slate-500 mt-2">
+          <p className="text-slate-500 mt-2 font-medium">
             {step === 1
               ? 'Masukkan email untuk menerima kode OTP.'
               : 'Masukkan OTP dan password baru.'}
@@ -113,7 +113,7 @@ export default function ForgotPassword() {
                     setEmail(e.target.value)
                   }
                   placeholder="Masukkan email"
-                  className="w-full border border-slate-200 rounded-xl pl-11 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full border border-slate-200 rounded-2xl pl-11 pr-4 py-3 outline-none focus:border-green-600 focus:ring-2 focus:ring-green-500/20 transition duration-200"
                 />
               </div>
             </div>
@@ -121,7 +121,7 @@ export default function ForgotPassword() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-green-600 hover:bg-green-700 disabled:bg-slate-400 text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2"
+              className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-slate-400 text-white py-3 rounded-2xl font-bold flex items-center justify-center gap-2 transition duration-200 shadow-md shadow-orange-500/10 cursor-pointer"
             >
               {loading && (
                 <LoaderCircle
@@ -149,7 +149,7 @@ export default function ForgotPassword() {
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
                 placeholder="Masukkan kode OTP"
-                className="w-full border border-slate-200 rounded-xl px-4 py-3 mt-2 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border border-slate-200 rounded-2xl px-4 py-3 mt-2 outline-none focus:border-green-600 focus:ring-2 focus:ring-green-500/20 transition duration-200"
               />
             </div>
 
@@ -172,7 +172,7 @@ export default function ForgotPassword() {
                     setNewPassword(e.target.value)
                   }
                   placeholder="Masukkan password baru"
-                  className="w-full border border-slate-200 rounded-xl pl-11 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full border border-slate-200 rounded-2xl pl-11 pr-4 py-3 outline-none focus:border-green-600 focus:ring-2 focus:ring-green-500/20 transition duration-200"
                 />
               </div>
             </div>
@@ -180,7 +180,7 @@ export default function ForgotPassword() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-green-600 hover:bg-green-700 disabled:bg-slate-400 text-white py-3 rounded-xl font-semibold flex items-center justify-center gap-2"
+              className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-slate-400 text-white py-3 rounded-2xl font-bold flex items-center justify-center gap-2 transition duration-200 shadow-md shadow-orange-500/10 cursor-pointer"
             >
               {loading && (
                 <LoaderCircle

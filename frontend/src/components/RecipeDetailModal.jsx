@@ -180,7 +180,7 @@ export default function RecipeDetailModal({ recipe, onClose }) {
         <div className="md:hidden fixed bottom-0 left-0 right-0 z-20 bg-white border-t p-4 grid grid-cols-2 gap-3">
           <button
             onClick={onClose}
-            className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-semibold"
+            className="w-full border border-green-700/30 hover:bg-green-50 text-green-800 py-3 rounded-2xl font-semibold transition duration-200"
           >
             Selesai
           </button>
@@ -188,7 +188,7 @@ export default function RecipeDetailModal({ recipe, onClose }) {
           <button
             onClick={handleSaveRecipe}
             disabled={saving}
-            className="w-full bg-green-600 hover:bg-green-700 disabled:bg-slate-400 text-white py-3 rounded-xl font-semibold inline-flex items-center justify-center gap-2"
+            className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-slate-400 text-white py-3 rounded-2xl font-semibold inline-flex items-center justify-center gap-2 transition duration-200 shadow-md shadow-orange-500/10"
           >
             {saving ? (
               <LoaderCircle size={18} className="animate-spin" />
@@ -202,7 +202,7 @@ export default function RecipeDetailModal({ recipe, onClose }) {
         <div className="hidden md:grid grid-cols-2 gap-3 px-6 pb-6">
           <button
             onClick={onClose}
-            className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 py-3 rounded-xl font-semibold"
+            className="w-full border border-green-700/30 hover:bg-green-50 text-green-800 py-3 rounded-2xl font-semibold transition duration-200"
           >
             Selesai
           </button>
@@ -210,7 +210,7 @@ export default function RecipeDetailModal({ recipe, onClose }) {
           <button
             onClick={handleSaveRecipe}
             disabled={saving}
-            className="w-full bg-green-600 hover:bg-green-700 disabled:bg-slate-400 text-white py-3 rounded-xl font-semibold inline-flex items-center justify-center gap-2"
+            className="w-full bg-orange-500 hover:bg-orange-600 disabled:bg-slate-400 text-white py-3 rounded-2xl font-semibold inline-flex items-center justify-center gap-2 transition duration-200 shadow-md shadow-orange-500/10"
           >
             {saving ? (
               <LoaderCircle size={18} className="animate-spin" />
@@ -227,14 +227,14 @@ export default function RecipeDetailModal({ recipe, onClose }) {
 
 function InfoCard({ icon: Icon, title, value, color }) {
   return (
-    <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4 md:p-5 flex items-center gap-4">
+    <div className="bg-yellow-50/40 border border-yellow-100/50 rounded-2xl p-4 md:p-5 flex items-center gap-4">
       <div className={`${color} p-3 rounded-2xl shrink-0`}>
         <Icon size={22} />
       </div>
 
       <div>
         <p className="text-slate-500 text-sm">{title}</p>
-        <h4 className="font-bold text-base md:text-lg">{value}</h4>
+        <h4 className="font-bold text-base md:text-lg text-green-900">{value}</h4>
       </div>
     </div>
   );
@@ -242,7 +242,7 @@ function InfoCard({ icon: Icon, title, value, color }) {
 
 function NutritionCard({ icon: Icon, title, value, color }) {
   return (
-    <div className="bg-slate-50 border border-slate-100 rounded-2xl p-4">
+    <div className="bg-yellow-50/40 border border-yellow-100/50 rounded-2xl p-4">
       <div
         className={`${color} w-10 h-10 rounded-xl flex items-center justify-center`}
       >
@@ -251,7 +251,7 @@ function NutritionCard({ icon: Icon, title, value, color }) {
 
       <p className="text-slate-500 text-xs md:text-sm mt-3">{title}</p>
 
-      <h4 className="text-base md:text-lg font-bold mt-1 break-words">
+      <h4 className="text-base md:text-lg font-bold mt-1 break-words text-green-900">
         {value || '-'}
       </h4>
     </div>

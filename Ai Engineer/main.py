@@ -19,7 +19,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-print("⏳ Memuat artefak AI SisaBisa...")
+print("[Loading] Memuat artefak AI SisaBisa...")
 
 # =====================================================================
 # PATCH SAPU JAGAT: AMANKAN SEMUA LAYER DARI QUANTIZATION_CONFIG
@@ -64,7 +64,7 @@ with open("tokenizer.json", "r", encoding="utf-8") as f:
 
 df_resep = pd.read_excel("dataset_resep_format_final.xlsx") 
 
-print("✅ Semua komponen AI Berhasil Dimuat!")
+print("[OK] Semua komponen AI Berhasil Dimuat!")
 
 # =====================================================================
 # ENDPOINT 1: REKOMENDASI RESEP (TWO-TOWER MODEL)
@@ -195,7 +195,7 @@ def dapatkan_detail(request: DetailRequest):
         return {"status": "success", "data": json_data, "sumber": "groq_llama3.1"}
         
     except Exception as e:
-        print(f"⚠️ Gen-AI gagal diakses, menggunakan sistem Fallback. Reason: {str(e)}")
+        print(f"[Warning] Gen-AI gagal diakses, menggunakan sistem Fallback. Reason: {str(e)}")
         fallback_data = {
             "waktu_masak": "20 menit",
             "tingkat_kesulitan": "Sedang",

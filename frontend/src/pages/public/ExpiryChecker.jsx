@@ -81,6 +81,16 @@ export default function ExpiryChecker({ compact = false }) {
     }
   };
 
+  const handleReset = () => {
+    setSearch('');
+    setSuggestions([]);
+    setSelectedIngredient(null);
+    setStorage('');
+    setPurchaseDate('');
+    setResult(null);
+    setMessage('');
+  };
+
   const storageRules = selectedIngredient?.storage_rules || [];
 
   return (
@@ -277,6 +287,16 @@ export default function ExpiryChecker({ compact = false }) {
                   year: 'numeric',
                 })}
               />
+            </div>
+
+            <div className="mt-5 flex justify-end">
+              <button
+                type="button"
+                onClick={handleReset}
+                className="w-full sm:w-auto bg-green-600 hover:bg-green-700 active:scale-[0.98] text-white font-bold px-6 py-3 rounded-2xl transition duration-150 text-sm cursor-pointer shadow-sm shadow-green-600/10 flex items-center justify-center gap-1.5"
+              >
+                Cek Bahan Lain
+              </button>
             </div>
           </div>
         )}

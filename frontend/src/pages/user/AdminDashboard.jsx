@@ -96,20 +96,20 @@ export default function AdminDashboard() {
       <motion.section
         initial={{ opacity: 0, y: 18 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-[2rem] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 p-6 md:p-8 text-white shadow-sm"
+        className="rounded-[2rem] bg-gradient-to-br from-green-700 to-lime-500 p-6 md:p-8 text-white shadow-md shadow-green-700/5"
       >
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm text-slate-100">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-sm text-green-50 font-semibold border border-white/5">
               <ShieldCheck size={16} />
               Admin Console
             </div>
 
-            <h1 className="mt-4 text-3xl md:text-4xl font-bold">
+            <h1 className="mt-4 text-3xl md:text-4xl font-bold tracking-tight">
               Dashboard Admin
             </h1>
 
-            <p className="mt-3 max-w-2xl text-slate-300">
+            <p className="mt-3 max-w-2xl text-green-50/95 font-medium leading-relaxed">
               Pantau ringkasan sistem dan kualitas data ingredient yang
               digunakan oleh fitur inventory user.
             </p>
@@ -117,14 +117,14 @@ export default function AdminDashboard() {
 
           <div className="grid grid-cols-2 gap-3 min-w-full lg:min-w-[360px]">
             <div className="rounded-2xl bg-white/10 border border-white/10 p-4">
-              <p className="text-sm text-slate-300">Ingredient</p>
+              <p className="text-sm text-green-50 font-medium">Ingredient</p>
               <p className="text-2xl font-bold mt-1">
                 {ingredients.length}
               </p>
             </div>
 
             <div className="rounded-2xl bg-white/10 border border-white/10 p-4">
-              <p className="text-sm text-slate-300">User</p>
+              <p className="text-sm text-green-50 font-medium">User</p>
               <p className="text-2xl font-bold mt-1">
                 {stats.total_users || 0}
               </p>
@@ -138,8 +138,8 @@ export default function AdminDashboard() {
           title="Total Ingredients"
           value={ingredients.length}
           icon={Boxes}
-          color="text-blue-700"
-          bg="bg-blue-100"
+          color="text-green-700"
+          bg="bg-green-100"
           index={0}
         />
 
@@ -147,8 +147,8 @@ export default function AdminDashboard() {
           title="Active Ingredients"
           value={activeIngredients.length}
           icon={Leaf}
-          color="text-green-700"
-          bg="bg-green-100"
+          color="text-green-800"
+          bg="bg-lime-100"
           index={1}
         />
 
@@ -156,8 +156,8 @@ export default function AdminDashboard() {
           title="Archived Ingredients"
           value={archivedIngredients.length}
           icon={Archive}
-          color="text-amber-700"
-          bg="bg-amber-100"
+          color="text-orange-700"
+          bg="bg-orange-100"
           index={2}
         />
 
@@ -165,8 +165,8 @@ export default function AdminDashboard() {
           title="Total Users"
           value={stats.total_users || 0}
           icon={Users}
-          color="text-purple-700"
-          bg="bg-purple-100"
+          color="text-green-700"
+          bg="bg-yellow-100"
           index={3}
         />
       </section>
@@ -175,21 +175,21 @@ export default function AdminDashboard() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="xl:col-span-2 bg-white rounded-3xl border border-slate-100 shadow-sm p-6"
+          className="xl:col-span-2 bg-white rounded-3xl border border-green-100/30 shadow-sm p-6"
         >
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
             <div>
-              <h2 className="text-xl font-bold text-slate-900">
+              <h2 className="text-xl font-bold text-green-950">
                 Recent Ingredients
               </h2>
-              <p className="text-sm text-slate-500 mt-1">
+              <p className="text-sm text-slate-500 mt-1 font-semibold">
                 Bahan terbaru dari master data ingredient.
               </p>
             </div>
 
             <Link
               to="/admin/ingredients"
-              className="inline-flex items-center gap-2 text-green-700 font-bold text-sm hover:underline"
+              className="inline-flex items-center gap-2 text-green-700 font-bold text-sm hover:underline animate-pulse"
             >
               Lihat semua
               <ArrowRight size={16} />
@@ -197,16 +197,16 @@ export default function AdminDashboard() {
           </div>
 
           {recentIngredients.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="mx-auto bg-slate-100 text-slate-500 w-16 h-16 rounded-3xl flex items-center justify-center">
+            <div className="bg-yellow-50/30 rounded-3xl text-center py-12">
+              <div className="mx-auto bg-yellow-100 text-green-700 w-16 h-16 rounded-3xl flex items-center justify-center">
                 <Package size={30} />
               </div>
 
-              <h3 className="font-bold mt-4 text-slate-900">
+              <h3 className="font-bold mt-4 text-green-950">
                 Belum ada ingredient
               </h3>
 
-              <p className="text-slate-500 mt-1 text-sm">
+              <p className="text-slate-500 mt-1 text-sm font-semibold">
                 Tambahkan ingredient pertama melalui halaman management.
               </p>
             </div>
@@ -215,13 +215,13 @@ export default function AdminDashboard() {
               {recentIngredients.map((item) => (
                 <div
                   key={item.id}
-                  className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 border border-slate-100 rounded-2xl p-4 hover:bg-slate-50 transition"
+                  className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 border border-green-100/20 rounded-2xl p-4 hover:bg-yellow-50/20 transition duration-200"
                 >
                   <div>
-                    <h3 className="font-bold text-slate-900 capitalize">
+                    <h3 className="font-bold text-green-950 capitalize">
                       {item.name}
                     </h3>
-                    <p className="text-sm text-slate-500 mt-1">
+                    <p className="text-sm text-slate-500 mt-1 font-semibold">
                       {item.category}
                     </p>
                   </div>
@@ -229,8 +229,8 @@ export default function AdminDashboard() {
                   <span
                     className={`w-fit px-3 py-1 rounded-full text-xs font-bold ${
                       item.is_active
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-slate-200 text-slate-600'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-orange-100 text-orange-800'
                     }`}
                   >
                     {item.is_active ? 'Aktif' : 'Diarsipkan'}
@@ -244,20 +244,20 @@ export default function AdminDashboard() {
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-3xl border border-slate-100 shadow-sm p-6"
+          className="bg-white rounded-3xl border border-green-100/30 shadow-sm p-6"
         >
-          <h2 className="text-xl font-bold text-slate-900">
+          <h2 className="text-xl font-bold text-green-950 tracking-tight">
             Quick Actions
           </h2>
 
-          <p className="text-sm text-slate-500 mt-1 mb-5">
+          <p className="text-sm text-slate-500 mt-1 mb-5 font-semibold">
             Akses cepat untuk mengelola data utama aplikasi.
           </p>
 
           <div className="space-y-3">
             <Link
               to="/admin/ingredients"
-              className="flex items-center justify-between gap-3 rounded-2xl bg-green-600 text-white p-4 font-bold hover:bg-green-700 transition"
+              className="flex items-center justify-between gap-3 rounded-2xl bg-orange-500 text-white p-4 font-bold hover:bg-orange-600 transition shadow-md shadow-orange-500/10 cursor-pointer"
             >
               <span className="inline-flex items-center gap-2">
                 <Plus size={18} />
@@ -268,7 +268,7 @@ export default function AdminDashboard() {
 
             <Link
               to="/admin/ingredients"
-              className="flex items-center justify-between gap-3 rounded-2xl bg-slate-100 text-slate-800 p-4 font-bold hover:bg-slate-200 transition"
+              className="flex items-center justify-between gap-3 rounded-2xl border border-green-700/30 text-green-800 p-4 font-bold hover:bg-green-50 transition duration-200 cursor-pointer"
             >
               <span className="inline-flex items-center gap-2">
                 <Package size={18} />
@@ -278,11 +278,11 @@ export default function AdminDashboard() {
             </Link>
           </div>
 
-          <div className="mt-6 rounded-2xl bg-slate-50 border border-slate-100 p-4">
-            <p className="text-sm font-bold text-slate-700">
+          <div className="mt-6 rounded-2xl bg-yellow-100/40 border border-yellow-100/20 p-4">
+            <p className="text-sm font-bold text-green-900">
               Catatan Admin
             </p>
-            <p className="text-sm text-slate-500 mt-1 leading-relaxed">
+            <p className="text-sm text-slate-600 mt-1 leading-relaxed font-semibold">
               Data ingredient aktif akan langsung digunakan oleh fitur inventory
               dan expiry checker user.
             </p>

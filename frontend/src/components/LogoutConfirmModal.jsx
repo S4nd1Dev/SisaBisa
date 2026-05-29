@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
-import { AlertTriangle, X } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
-export default function DeleteConfirmModal({
-  itemName,
+export default function LogoutConfirmModal({
   onCancel,
   onConfirm,
+  isAdmin = false,
 }) {
   return (
     <motion.div
@@ -23,24 +23,18 @@ export default function DeleteConfirmModal({
             initial={{ rotate: -8, scale: 0.9 }}
             animate={{ rotate: 0, scale: 1 }}
             transition={{ duration: 0.25 }}
-            className="bg-orange-100 text-orange-700 p-3 rounded-2xl"
+            className="bg-red-100 text-red-600 p-3 rounded-2xl"
           >
-            <AlertTriangle size={24} />
+            <LogOut size={24} />
           </motion.div>
 
-          <button
-            onClick={onCancel}
-            className="bg-slate-100 hover:bg-slate-200 p-2.5 rounded-full transition-all duration-200"
-          >
-            <X size={18} />
-          </button>
+
         </div>
 
-        <h2 className="text-xl font-bold mt-5 text-green-900">Hapus bahan ini?</h2>
+        <h2 className="text-xl font-bold mt-5 text-green-900">Keluar dari Akun?</h2>
 
         <p className="text-slate-600 mt-2 leading-relaxed">
-          <span className="font-semibold text-green-900">{itemName}</span> akan dihapus dari
-          inventory. Tindakan ini tidak bisa dibatalkan.
+          Apakah Anda yakin ingin keluar dari {isAdmin ? 'Panel Admin' : 'aplikasi SisaBisa'}? Anda harus masuk kembali untuk mengakses data Anda.
         </p>
 
         <div className="grid grid-cols-2 gap-3 mt-6">
@@ -55,9 +49,9 @@ export default function DeleteConfirmModal({
           <motion.button
             whileTap={{ scale: 0.97 }}
             onClick={onConfirm}
-            className="bg-orange-500 text-white py-3 rounded-2xl font-semibold hover:bg-orange-600 transition duration-200 shadow-md shadow-orange-500/10"
+            className="bg-red-500 text-white py-3 rounded-2xl font-semibold hover:bg-red-600 transition duration-200 shadow-md shadow-red-500/10"
           >
-            Hapus
+            Keluar
           </motion.button>
         </div>
       </motion.div>

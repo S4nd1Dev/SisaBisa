@@ -79,11 +79,11 @@ export default function ForgotPasswordModal({
   };
 
   return (
-    <div className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center px-4">
-      <div className="relative w-full max-w-md bg-white rounded-2xl shadow-xl p-6">
+    <div className="fixed inset-0 z-[60] bg-black/50 flex items-center justify-center px-4 backdrop-blur-sm">
+      <div className="relative w-full max-w-md bg-white rounded-3xl shadow-xl p-6">
         <button
           onClick={onClose}
-          className="absolute -top-3 -right-3 bg-slate-700 text-white rounded-full p-1"
+          className="absolute right-4 top-4 text-slate-500 hover:text-slate-800 hover:bg-slate-100 p-2.5 rounded-full transition-all duration-200"
         >
           <X size={18} />
         </button>
@@ -94,11 +94,11 @@ export default function ForgotPasswordModal({
           </div>
 
           <div>
-            <h1 className="text-2xl font-bold text-slate-800">
+            <h1 className="text-2xl font-bold text-green-900 tracking-tight">
               Lupa Password
             </h1>
 
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-slate-500 font-medium">
               {step === 1
                 ? 'Kirim OTP reset password'
                 : 'Masukkan OTP dan password baru'}
@@ -124,14 +124,14 @@ export default function ForgotPasswordModal({
                 onChange={(e) =>
                   setEmail(e.target.value)
                 }
-                className="w-full border rounded-lg px-4 py-3 pl-11"
+                className="w-full border border-slate-200 rounded-2xl py-3 pl-11 pr-4 outline-none focus:border-green-600 focus:ring-2 focus:ring-green-500/20 transition-all duration-200"
                 required
               />
             </div>
 
             <button
               disabled={loading}
-              className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold disabled:bg-slate-400 flex items-center justify-center gap-2"
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-2xl font-bold disabled:bg-slate-400 flex items-center justify-center gap-2 transition duration-200 shadow-md shadow-orange-500/10 cursor-pointer"
             >
               {loading && (
                 <LoaderCircle
@@ -155,7 +155,7 @@ export default function ForgotPasswordModal({
               onChange={(e) =>
                 setOtp(e.target.value)
               }
-              className="w-full border rounded-lg px-4 py-3"
+              className="w-full border border-slate-200 rounded-2xl py-3 px-4 outline-none focus:border-green-600 focus:ring-2 focus:ring-green-500/20 transition-all duration-200"
               required
             />
 
@@ -172,14 +172,14 @@ export default function ForgotPasswordModal({
                 onChange={(e) =>
                   setNewPassword(e.target.value)
                 }
-                className="w-full border rounded-lg px-4 py-3 pl-11"
+                className="w-full border border-slate-200 rounded-2xl py-3 pl-11 pr-4 outline-none focus:border-green-600 focus:ring-2 focus:ring-green-500/20 transition-all duration-200"
                 required
               />
             </div>
 
             <button
               disabled={loading}
-              className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold disabled:bg-slate-400 flex items-center justify-center gap-2"
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-2xl font-bold disabled:bg-slate-400 flex items-center justify-center gap-2 transition duration-200 shadow-md shadow-orange-500/10 cursor-pointer"
             >
               {loading && (
                 <LoaderCircle
@@ -194,7 +194,7 @@ export default function ForgotPasswordModal({
         )}
 
         {message && (
-          <p className="mt-4 text-sm text-center text-green-700">
+          <p className="mt-4 text-sm text-center text-green-700 font-semibold bg-green-50 py-2.5 rounded-2xl border border-green-100">
             {message}
           </p>
         )}
