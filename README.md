@@ -159,7 +159,7 @@ Dashboard pengguna untuk memantau inventory dan bahan yang perlu diprioritaskan.
 
 Halaman pengelolaan inventory bahan makanan pengguna.
 
-![Inventory](./docs/inventory.png)
+![Inventory](./docs/Inventory.png)
 
 ---
 
