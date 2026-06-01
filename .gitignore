@@ -7,5 +7,3 @@ build
 __pycache__/
 .ipynb_checkpoints/
 *.pyc
-dataset_resep_format_final.xlsx
-tower_kulkas.keras
