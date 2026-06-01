@@ -68,6 +68,7 @@ export default function FavoriteRecipes() {
   const paginatedFavorites = filteredFavorites.slice(startIndex, startIndex + itemsPerPage);
 
   const mapFavoriteToRecipe = (recipe) => ({
+    id:                recipe.id,
     nama_menu:         recipe.recipe_name,
     bahan_resep:       recipe.ingredients,
     langkah_memasak:   recipe.cooking_steps || [],
@@ -303,6 +304,10 @@ export default function FavoriteRecipes() {
           <RecipeDetailModal
             recipe={selectedRecipe}
             onClose={() => setSelectedRecipe(null)}
+            onFavoriteToggle={async () => {
+              const data = await fetchFavorites();
+              setFavorites(data);
+            }}
           />
         )}
       </div>
