@@ -249,7 +249,19 @@ export default function Inventory() {
               ))}
             </select>
 
-            <input name="purchase_date" value={form.purchase_date} onChange={handleChange} type="date" className={inputCls} required />
+            <input
+              name="purchase_date"
+              value={form.purchase_date}
+              onChange={handleChange}
+              placeholder="Tanggal Beli"
+              type={form.purchase_date ? 'date' : 'text'}
+              onFocus={(e) => (e.target.type = 'date')}
+              onBlur={(e) => {
+                if (!e.target.value) e.target.type = 'text';
+              }}
+              className={inputCls}
+              required
+            />
 
             <button className="md:col-span-2 bg-[#FFA02E] hover:bg-[#e08316] active:scale-[0.99] transition-all duration-200 text-white py-3.5 rounded-2xl font-bold shadow-md shadow-orange-400/20 hover:shadow-lg hover:shadow-orange-400/25 hover:-translate-y-0.5 cursor-pointer">
               Tambah ke Inventory
